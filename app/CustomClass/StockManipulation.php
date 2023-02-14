@@ -49,7 +49,6 @@ class StockManipulation
                }
           }
        }
-
 //       dd($quantity_array);
        $collection = collect($stocks_id);
        $zipped = $collection->zip($quantity_array);
@@ -156,6 +155,7 @@ class StockManipulation
            $product_id = $sale_stock['product_id'];
            $unit_id = $sale_stock['unit_id'];
            $total_quantity = Stock::where([['product_id',$product_id],['unit_id',$unit_id]])->sum('quantity');
+//           dd($total_quantity);
 //           $data = StockCount::where([['product_id',$product_id],['unit_id',$unit_id]])->get();
            StockCount::where([['product_id',$product_id],['unit_id',$unit_id]])->update([
                'total_quantity' => $total_quantity,

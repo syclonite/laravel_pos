@@ -63,6 +63,10 @@
                             <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Sale Management</span></a>
                     </li>
                     <li>
+                        <a href="{{route('expenses.index')}}" class="nav-link px-0 align-middle text-dark">
+                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Expense Management</span></a>
+                    </li>
+                    <li>
                         <a href="#submenu3" class="nav-link px-0 align-middle text-dark" data-bs-toggle="collapse">
                             <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Reports</span> </a>
                         <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">

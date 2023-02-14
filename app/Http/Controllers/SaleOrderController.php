@@ -142,7 +142,7 @@ class SaleOrderController extends Controller
         }
         $stocks = new StockManipulation();
         $stocks->reduce_stock($sale_order_details);
-        $stocks->reduce_total_stock($sale_order_details);
+        $stocks->reduce_total_stock($request);
     }
 
     /**

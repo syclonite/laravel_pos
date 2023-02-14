@@ -11,6 +11,7 @@ use \App\Http\Controllers\SuppliersController;
 use \App\Http\Controllers\UnitController;
 use \App\Http\Controllers\PurchaseOrderController;
 use \App\Http\Controllers\SaleOrderController;
+use \App\Http\Controllers\ExpenseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,8 +35,14 @@ Route::resource('roles',RoleController::class);
 Route::resource('subcategories',SubCategoryController::class);
 Route::resource('suppliers',SuppliersController::class);
 Route::resource('units',UnitController::class);
-
 Route::resource('sales',SaleOrderController::class);
+Route::resource('expenses',ExpenseController::class);
+Route::get('/expense_record/index',[ExpenseController::class,'expense_record_index'])->name('expense_record.index');
+Route::get('/expense_record/create',[ExpenseController::class,'expense_record_create'])->name('expense_record.create');
+Route::post('/expense_record/store',[ExpenseController::class,'expense_record_store'])->name('expense_record.store');
+Route::get('/expense_record/edit/{id}',[ExpenseController::class,'expense_record_edit'])->name('expense_record.edit');
+Route::put('/expense_record/update/{id}',[ExpenseController::class,'expense_record_update'])->name('expense_record.update');
+Route::delete('/expense_record/delete/{id}',[ExpenseController::class,'expanse_record_destroy'])->name('expense_record.destroy');
 
 Route::get('/purchase',[PurchaseOrderController::class, 'index'])->name('purchase.index');
 Route::get('/purchase/create',[PurchaseOrderController::class, 'create'])->name('purchase.create');
