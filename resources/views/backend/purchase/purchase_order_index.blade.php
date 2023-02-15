@@ -24,6 +24,8 @@
                 <th>Supplier Name</th>
                 <th>Billing Amount</th>
                 <th>Paid Amount</th>
+                <th>Discount</th>
+                <th>Extra Charge</th>
                 <th>Due Amount</th>
                 <th>Purchased By</th>
                 <th>Status</th>
@@ -38,6 +40,8 @@
                     <td>{{$purchaseOrder->supplier_id}}</td>
                     <td>{{$purchaseOrder->billing_amount}}</td>
                     <td>{{$purchaseOrder->paid_amount}}</td>
+                    <td>{{$purchaseOrder->discount}}</td>
+                    <td>{{$purchaseOrder->extra_charge}}</td>
                     <td>{{'Due Amount'}}</td>
                     <td>{{$purchaseOrder->user_id}}</td>
                     <td>{{$purchaseOrder->status}}</td>

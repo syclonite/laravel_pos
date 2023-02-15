@@ -190,12 +190,12 @@
                 $("#total_bill").text(result_2);
             }
             var paid_amount = $("#paid_amount").val();
-            if (total_bill >= paid_amount){
-               var change_amount = total_bill - paid_amount;
+            if (result_2 >= paid_amount){
+               var change_amount = result_2 - paid_amount;
                 $("#change_amount").text(change_amount);
             //     // alert("if condition");
             }else{
-                change_amount = paid_amount - total_bill;
+                change_amount = paid_amount - result_2;
                 $("#change_amount").text(change_amount);
             }
 
@@ -250,6 +250,7 @@
         //     payment_status_value;
         //     submit_stock_order(data,payment_status_value)
         // }
+
         function submit_purchase(data){
             // return console.log(data);
             // return console.log("percentage status_value:"+value)
@@ -266,6 +267,8 @@
                         supplier_id: $("#supplier_id").val(),
                         paid_amount: $("#paid_amount").val(),
                         billing_amount: parseFloat($("#total_bill").text()),
+                        extra_charge: $("#extra_charge").val(),
+                        discount: $("#discount").val(),
                     },
                     success: function (data) {
                         console.log(data)
