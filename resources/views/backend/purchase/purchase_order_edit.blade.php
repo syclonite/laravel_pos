@@ -67,13 +67,13 @@
         <div class="col-xs-6 col-sm-6 col-md-6">
             <div class="form-group">
                 <strong>Extra Charge:</strong>
-                <input class="form-control" type="text" name="extra_charge" id="extra_charge"  value="{{$purchase_order->extra_charge}}" >
+                <input class="form-control" type="text" name="extra_charge" id="extra_charge" onchange="subtotal_calculation()" value="{{$purchase_order->extra_charge}}" >
             </div>
         </div>
         <div class="col-xs-6 col-sm-6 col-md-6">
             <div class="form-group">
                 <strong>Discount:</strong>
-                <input class="form-control" type="text" name="discount" id="discount"  value="{{$purchase_order->discount}}" >
+                <input class="form-control" type="text" name="discount" id="discount" onchange="subtotal_calculation()" value="{{$purchase_order->discount}}" >
             </div>
         </div>
 
@@ -127,7 +127,8 @@
     <button type="button" class="btn btn-primary col-2 col-md-2 col-sm-2 savebtn" id="submit" >Update</button>
     {{--    </form>--}}
 
-    <script src="{{url('js/jquery.min.js')}}"></script>
+{{--    <script src="{{url('js/jquery.min.js')}}"></script>--}}
+
     <script>
         $("button#submit").click(function() {
             var data = [];

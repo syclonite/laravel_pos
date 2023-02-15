@@ -4,8 +4,11 @@
     <title>Dashboard</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link href="{{url('css/backend_bootstrap_5.1.min.css')}}" rel="stylesheet"  crossorigin="anonymous">
+    <script src="{{url('js/jquery.min.js')}}"></script>
     <script src="{{url('js/backend_popper.min.js')}}"  crossorigin="anonymous"></script>
     <script src="{{url('js/backend_bootstrap_5.1.3.min.js')}}"  crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 </head>
 <body>
 @include('backend.partials.navbar')
@@ -63,8 +66,16 @@
                             <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Sale Management</span></a>
                     </li>
                     <li>
-                        <a href="{{route('expenses.index')}}" class="nav-link px-0 align-middle text-dark">
+                        <a href="#expense" class="nav-link px-0 align-middle text-dark" data-bs-toggle="collapse">
                             <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Expense Management</span></a>
+                        <ul class="collapse nav flex-column ms-1" id="expense" data-bs-parent="#menu">
+                            <li class="w-100 text-dark">
+                                <a href="{{route('expenses.index')}}" class="nav-link px-0"> <span class="d-none d-sm-inline">Expense Category</span></a>
+                            </li>
+                            <li class="text-dark">
+                                <a href="{{route('expense_record.index')}}" class="nav-link px-0"> <span class="d-none d-sm-inline">Expense Record</span></a>
+                            </li>
+                        </ul>
                     </li>
                     <li>
                         <a href="#submenu3" class="nav-link px-0 align-middle text-dark" data-bs-toggle="collapse">
@@ -97,6 +108,16 @@
     </div>
 </div>
 </body>
-
 </html>
+
+<script>
+
+    $(document).ready(function() {
+
+        // Initialize select2
+        $("select").select2();
+
+    });
+
+</script>
 

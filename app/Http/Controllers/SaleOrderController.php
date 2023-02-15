@@ -50,6 +50,8 @@ class SaleOrderController extends Controller
             'user_id' => '2',
             'billing_amount' => $request['sale_order']['billing_amount'],
             'paid_amount' => $request['sale_order']['paid_amount'],
+            'extra_charge' => $request['sale_order']['extra_charge'],
+            'discount' => $request['sale_order']['discount'],
             'status' => '1',
         ]);
         $sale_order->save();
@@ -97,8 +99,8 @@ class SaleOrderController extends Controller
         $products = Product::all();
         $units = Unit::all();
         $customers = Customer::all();
-        $sale_order = SaleOrder::find($id)->first();
-        $sale_order_details = SaleOrderDetail::get()->where('sale_order_id',$sale_order->id);
+        $sale_order = SaleOrder::find($id);
+        $sale_order_details = SaleOrderDetail::get()->where('sale_order_id',$id);
         return view('backend.sale.sale_order_edit', compact('sale_order','sale_order_details','customers','products','units'))->with('i');
     }
 
@@ -118,6 +120,8 @@ class SaleOrderController extends Controller
         $sale_order->user_id = '2';
         $sale_order->billing_amount = $request['sale_order']['billing_amount'];
         $sale_order->paid_amount = $request['sale_order']['paid_amount'];
+        $sale_order->extra_charge = $request['sale_order']['extra_charge'];
+        $sale_order->discount = $request['sale_order']['discount'];
         $sale_order->status = '1';
         $sale_order->save();
         $sale_order_details = $request['sale_order_details'];

@@ -30,19 +30,31 @@
         <div class="col-xs-6 col-sm-6 col-md-6">
             <div class="form-group">
                 <strong>Bill No:</strong>
-                <input type="text" name="" class="form-control" id="bill_no" value="{{$sale_order->id}}"  >
+                <input type="text" name="" class="form-control" id="bill_no" value="{{$sale_order->id}}" disabled>
             </div>
         </div>
         <div class="col-xs-6 col-sm-6 col-md-6">
             <div class="form-group">
                 <strong>Billing Amount:</strong>
-                <input id="billing_amount" class="form-control" type="text" name="billing_amount" value="{{$sale_order->billing_amount}}" >
+                <input id="billing_amount" class="form-control" type="text" name="billing_amount" value="{{$sale_order->billing_amount}}" disabled>
             </div>
         </div>
         <div class="col-xs-6 col-sm-6 col-md-6">
             <div class="form-group">
                 <strong>Paid Amount:</strong>
                 <input class="form-control" type="text" name="paid_amount" id="paid_amount"  value="{{$sale_order->paid_amount}}" disabled>
+            </div>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6">
+            <div class="form-group">
+                <strong>Extra Charge:</strong>
+                <input class="form-control" type="text" name="extra_charge" id="extra_charge" onchange="subtotal_calculation()"  value="{{$sale_order->extra_charge}}" >
+            </div>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6">
+            <div class="form-group">
+                <strong>Discount:</strong>
+                <input class="form-control" type="text" name="discount" id="discount" onchange="subtotal_calculation()" value="{{$sale_order->discount}}" >
             </div>
         </div>
         <div class="col-xs-6 col-sm-6 col-md-6">
@@ -88,10 +100,10 @@
                     </select>
                 </td>
                 <td>
-                    <input id="product_price" class="form-control" type="text" name="product_price"  value="{{$sale_order_detail->product_selling_price}}">
+                    <input id="product_price" class="form-control" type="text" name="product_price" onchange="subtotal_calculation()" value="{{$sale_order_detail->product_selling_price}}">
                 </td>
                 <td>
-                    <input id="quantity" class="form-control quantity" type="text" name="quantity"  value="{{$sale_order_detail->quantity}}">
+                    <input id="quantity" class="form-control quantity" type="text" name="quantity" onchange="subtotal_calculation()" value="{{$sale_order_detail->quantity}}">
                 </td>
                 <td>
                     <select id="unit_id" name="unit_id" id="" class="form-control unit_id" >
@@ -110,7 +122,6 @@
     <button type="button" class="btn btn-primary col-2 col-md-2 col-sm-2 savebtn" id="submit" >Update</button>
     {{--    </form>--}}
 
-    <script src="{{url('js/jquery.min.js')}}"></script>
     <script>
         $("button#submit").click(function() {
             // alert('hello');
@@ -143,10 +154,29 @@
 
         });
 
+        function subtotal_calculation(){
+            var sum_subtotal = 0
+            $("table > tbody  > tr").each(function(index, tr) {
+                var subtotal = parseInt($(this).find('#product_price').val()) * parseInt($(this).find('#quantity').val());
+                parseInt($(this).find('#subtotal').val(subtotal));
+                sum_subtotal += subtotal;
+            })
+            // alert(sum_subtotal);
+            var discount = $('#discount').val();
+            var extra_charge = $('#extra_charge').val();
+            var total_bill = sum_subtotal;
+            if( discount != '' || extra_charge != ''){
+                var result_1 = (total_bill + Number(extra_charge)) - discount;
+                $("#billing_amount").val(result_1);
+            }
+
+        }
+
         function showmsg(){
             alert("Order Updated")
             window.location.reload();
         }
+
 
         function submit_purchase(data){
             // return console.log(data);
@@ -165,6 +195,8 @@
                         customer_id: $("#customer_id").val(),
                         paid_amount: $("#paid_amount").val(),
                         billing_amount: $("#billing_amount").val(),
+                        extra_charge: $("#extra_charge").val(),
+                        discount: $("#discount").val(),
                     },
                     success: function (data) {
                         console.log(data)

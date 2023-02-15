@@ -139,7 +139,7 @@
     </div>
     {{--    </form>--}}
 
-    <script src="{{url('js/jquery.min.js')}}"></script>
+{{--    <script src="{{url('js/jquery.min.js')}}"></script>--}}
     <script>
         // function selling_amount_cal(){
         //     var quantity = $("#quantity").val();
