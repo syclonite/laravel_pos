@@ -19,7 +19,7 @@
         <br>
         <table class="table table-bordered">
             <tr>
-                <th>No</th>
+                <th>No </th>
                 <th>Bill No</th>
                 <th>Customer</th>
                 <th>Billing Amount</th>
