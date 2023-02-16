@@ -38,11 +38,27 @@
                     <td>{{$user->status}}</td>
                     <td>{{$user->address}}</td>
                     <td class="text-center">
+                        <a class="btn btn-primary" href="{{route('users.edit', $user->id)}}">Edit</a>
                         <form action="{{route('users.destroy',$user->id)}}" method="POST">
-                            <a class="btn btn-primary" href="{{route('users.edit', $user->id)}}">Edit</a>
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                            @if($user->deleted_at == null || $user->deleted_at == '')
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"  class="btn btn-danger">Delete</button>
+                            @endif
+                        </form>
+                        <form action="{{route('users.restore',$user->id)}}" method="POST">
+                            @if($user->deleted_at != null || $user->deleted_at != '')
+                                @csrf
+                                @method('POST')
+                                <button type="submit"  class="btn btn-success">Restore</button>
+                            @endif
+                        </form>
+                        <form action="{{route('users.force_delete',$user->id)}}" method="POST">
+                            @if($user->deleted_at != null || $user->deleted_at != '')
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"  class="btn btn-warning">Force Delete</button>
+                            @endif
                         </form>
                     </td>
                 </tr>

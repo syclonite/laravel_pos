@@ -27,7 +27,7 @@
                 <th>Address</th>
                 <th>Remarks</th>
 
-                <th colspan="2" class="text-center" >Action</th>
+                <th colspan="3" class="text-center" >Action</th>
             </tr>
             <tbody>
             @foreach($customers as $customer)
@@ -40,11 +40,27 @@
                     <td>{{$customer->address}}</td>
                     <td>{{$customer->remarks}}</td>
                     <td class="text-center">
+                        <a class="btn btn-primary" href="{{route('customers.edit', $customer->id)}}">Edit</a>
                         <form action="{{route('customers.destroy',$customer->id)}}" method="POST">
-                            <a class="btn btn-primary" href="{{route('customers.edit', $customer->id)}}">Edit</a>
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                            @if($customer->deleted_at == null || $customer->deleted_at == '')
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"  class="btn btn-danger">Delete</button>
+                            @endif
+                        </form>
+                        <form action="{{route('customers.restore',$customer->id)}}" method="POST">
+                            @if($customer->deleted_at != null || $customer->deleted_at != '')
+                                @csrf
+                                @method('POST')
+                                <button type="submit"  class="btn btn-success">Restore</button>
+                            @endif
+                        </form>
+                        <form action="{{route('customers.force_delete',$customer->id)}}" method="POST">
+                            @if($customer->deleted_at != null || $customer->deleted_at != '')
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"  class="btn btn-warning">Force Delete</button>
+                            @endif
                         </form>
                     </td>
                 </tr>

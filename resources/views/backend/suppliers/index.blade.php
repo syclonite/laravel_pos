@@ -38,11 +38,27 @@
                     <td>{{$supplier->remarks}}</td>
                     <td>{{$supplier->status}}</td>
                     <td class="text-center">
+                        <a class="btn btn-primary" href="{{route('suppliers.edit', $supplier->id)}}">Edit</a>
                         <form action="{{route('suppliers.destroy',$supplier->id)}}" method="POST">
-                            <a class="btn btn-primary" href="{{route('suppliers.edit', $supplier->id)}}">Edit</a>
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                            @if($supplier->deleted_at == null || $supplier->deleted_at == '')
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"  class="btn btn-danger">Delete</button>
+                            @endif
+                        </form>
+                        <form action="{{route('suppliers.restore',$supplier->id)}}" method="POST">
+                            @if($supplier->deleted_at != null || $supplier->deleted_at != '')
+                                @csrf
+                                @method('POST')
+                                <button type="submit"  class="btn btn-success">Restore</button>
+                            @endif
+                        </form>
+                        <form action="{{route('suppliers.force_delete',$supplier->id)}}" method="POST">
+                            @if($supplier->deleted_at != null || $supplier->deleted_at != '')
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"  class="btn btn-warning">Force Delete</button>
+                            @endif
                         </form>
                     </td>
                 </tr>

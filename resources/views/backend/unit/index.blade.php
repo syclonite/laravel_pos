@@ -33,11 +33,27 @@
                     <td>{{$unit->unit_description}}</td>
                     <td>{{$unit->status}}</td>
                     <td class="text-center">
+                        <a class="btn btn-primary" href="{{route('units.edit', $unit->id)}}">Edit</a>
                         <form action="{{route('units.destroy',$unit->id)}}" method="POST">
-                            <a class="btn btn-primary" href="{{route('units.edit', $unit->id)}}">Edit</a>
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                            @if($unit->deleted_at == null || $unit->deleted_at == '')
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"  class="btn btn-danger">Delete</button>
+                            @endif
+                        </form>
+                        <form action="{{route('units.restore',$unit->id)}}" method="POST">
+                            @if($unit->deleted_at != null || $unit->deleted_at != '')
+                                @csrf
+                                @method('POST')
+                                <button type="submit"  class="btn btn-success">Restore</button>
+                            @endif
+                        </form>
+                        <form action="{{route('units.force_delete',$unit->id)}}" method="POST">
+                            @if($unit->deleted_at != null || $unit->deleted_at != '')
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"  class="btn btn-warning">Force Delete</button>
+                            @endif
                         </form>
                     </td>
                 </tr>

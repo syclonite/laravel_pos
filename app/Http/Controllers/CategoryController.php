@@ -14,7 +14,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
+        $categories = Category::withTrashed()->get();
         return view('backend.category.index',compact('categories'))->with('i');
     }
 
@@ -95,5 +95,19 @@ class CategoryController extends Controller
         $category->delete(); // Easy right?
 
         return redirect()->route('categories.index')->with('success','Category Deleted.');
+    }
+
+    public function restore($id)
+    {
+        Category::where('id', $id)->withTrashed()->restore();
+
+        return redirect()->route('categories.index')->with('Category restored successfully.');
+    }
+
+    public function forceDelete($id)
+    {
+        Category::where('id', $id)->withTrashed()->forceDelete();
+
+        return redirect()->route('categories.index')->with('Category force deleted successfully.');
     }
 }

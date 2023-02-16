@@ -34,11 +34,27 @@
                     <td>{{$category->category_description}}</td>
                     <td>{{$category->status}}</td>
                     <td class="text-center">
+                        <a class="btn btn-primary" href="{{route('categories.edit', $category->id)}}">Edit</a>
                         <form action="{{route('categories.destroy',$category->id)}}" method="POST">
-                            <a class="btn btn-primary" href="{{route('categories.edit', $category->id)}}">Edit</a>
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                            @if($category->deleted_at == null || $category->deleted_at == '')
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"  class="btn btn-danger">Delete</button>
+                            @endif
+                        </form>
+                        <form action="{{route('categories.restore',$category->id)}}" method="POST">
+                            @if($category->deleted_at != null || $category->deleted_at != '')
+                                @csrf
+                                @method('POST')
+                                <button type="submit"  class="btn btn-success">Restore</button>
+                            @endif
+                        </form>
+                        <form action="{{route('categories.force_delete',$category->id)}}" method="POST">
+                            @if($category->deleted_at != null || $category->deleted_at != '')
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"  class="btn btn-warning">Force Delete</button>
+                            @endif
                         </form>
                     </td>
                 </tr>

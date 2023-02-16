@@ -15,7 +15,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::get();
+        $products = Product::withTrashed()->get();
         return view('backend.products.index',compact('products'))->with('i');
     }
 
@@ -99,5 +99,19 @@ class ProductController extends Controller
         $product->delete(); // Easy right?
 
         return redirect()->route('products.index')->with('success','Product Deleted.');
+    }
+
+    public function restore($id)
+    {
+        Product::where('id', $id)->withTrashed()->restore();
+
+        return redirect()->route('products.index')->with('Product restored successfully.');
+    }
+
+    public function forceDelete($id)
+    {
+        Product::where('id', $id)->withTrashed()->forceDelete();
+
+        return redirect()->route('products.index')->with('Product force deleted successfully.');
     }
 }

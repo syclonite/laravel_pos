@@ -36,11 +36,27 @@
                     <td>{{$subcategory->category->category_name}}</td>
                     <td>{{$subcategory->status}}</td>
                     <td class="text-center">
+                        <a class="btn btn-primary" href="{{route('subcategories.edit', $subcategory->id)}}">Edit</a>
                         <form action="{{route('subcategories.destroy',$subcategory->id)}}" method="POST">
-                            <a class="btn btn-primary" href="{{route('subcategories.edit', $subcategory->id)}}">Edit</a>
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                            @if($subcategory->deleted_at == null || $subcategory->deleted_at == '')
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"  class="btn btn-danger">Delete</button>
+                            @endif
+                        </form>
+                        <form action="{{route('subcategories.restore',$subcategory->id)}}" method="POST">
+                            @if($subcategory->deleted_at != null || $subcategory->deleted_at != '')
+                                @csrf
+                                @method('POST')
+                                <button type="submit"  class="btn btn-success">Restore</button>
+                            @endif
+                        </form>
+                        <form action="{{route('subcategories.force_delete',$subcategory->id)}}" method="POST">
+                            @if($subcategory->deleted_at != null || $subcategory->deleted_at != '')
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"  class="btn btn-warning">Force Delete</button>
+                            @endif
                         </form>
                     </td>
                 </tr>

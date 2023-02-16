@@ -34,11 +34,27 @@
                     <td>{{$role->role_description}}</td>
                     <td>{{$role->status}}</td>
                     <td class="text-center">
+                        <a class="btn btn-primary" href="{{route('roles.edit', $role->id)}}">Edit</a>
                         <form action="{{route('roles.destroy',$role->id)}}" method="POST">
-                            <a class="btn btn-primary" href="{{route('roles.edit', $role->id)}}">Edit</a>
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                            @if($role->deleted_at == null || $role->deleted_at == '')
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"  class="btn btn-danger">Delete</button>
+                            @endif
+                        </form>
+                        <form action="{{route('roles.restore',$role->id)}}" method="POST">
+                            @if($role->deleted_at != null || $role->deleted_at != '')
+                                @csrf
+                                @method('POST')
+                                <button type="submit"  class="btn btn-success">Restore</button>
+                            @endif
+                        </form>
+                        <form action="{{route('roles.force_delete',$role->id)}}" method="POST">
+                            @if($role->deleted_at != null || $role->deleted_at != '')
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"  class="btn btn-warning">Force Delete</button>
+                            @endif
                         </form>
                     </td>
                 </tr>

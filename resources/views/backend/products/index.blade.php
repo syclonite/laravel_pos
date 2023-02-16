@@ -36,11 +36,27 @@
                     <td>{{$product->subcategory->subcategory_name}}</td>
                     <td>{{$product->status}}</td>
                     <td class="text-center">
+                        <a class="btn btn-primary" href="{{route('products.edit', $product->id)}}">Edit</a>
                         <form action="{{route('products.destroy',$product->id)}}" method="POST">
-                            <a class="btn btn-primary" href="{{route('products.edit', $product->id)}}">Edit</a>
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                            @if($product->deleted_at == null || $product->deleted_at == '')
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"  class="btn btn-danger">Delete</button>
+                            @endif
+                        </form>
+                        <form action="{{route('products.restore',$product->id)}}" method="POST">
+                            @if($product->deleted_at != null || $product->deleted_at != '')
+                                @csrf
+                                @method('POST')
+                                <button type="submit"  class="btn btn-success">Restore</button>
+                            @endif
+                        </form>
+                        <form action="{{route('products.force_delete',$product->id)}}" method="POST">
+                            @if($product->deleted_at != null || $product->deleted_at != '')
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"  class="btn btn-warning">Force Delete</button>
+                            @endif
                         </form>
                     </td>
                 </tr>

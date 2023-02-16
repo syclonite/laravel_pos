@@ -14,7 +14,7 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $customers = Customer::all();
+        $customers = Customer::withTrashed()->get();
         return view('backend.customer.index',compact('customers'))->with('i');
     }
 
@@ -104,4 +104,20 @@ class CustomerController extends Controller
 
         return redirect()->route('customers.index')->with('success','Customer Deleted.');
     }
+
+    public function restore($id)
+    {
+        Customer::where('id', $id)->withTrashed()->restore();
+
+        return redirect()->route('customers.index')->with('Customer restored successfully.');
+    }
+
+    public function forceDelete($id)
+    {
+        Customer::where('id', $id)->withTrashed()->forceDelete();
+
+        return redirect()->route('customers.index')->with('Customer force deleted successfully.');
+    }
+
+
 }

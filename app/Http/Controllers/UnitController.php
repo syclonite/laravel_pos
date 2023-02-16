@@ -14,7 +14,7 @@ class UnitController extends Controller
      */
     public function index()
     {
-        $units = Unit::all();
+        $units = Unit::withTrashed()->get();
         return view('backend.unit.index',compact('units'))->with('i');
     }
 
@@ -96,4 +96,18 @@ class UnitController extends Controller
         $unit->delete(); // Easy right?
         return redirect()->route('units.index')->with('success','Unit Deleted.');
     }
+    public function restore($id)
+    {
+        Unit::where('id', $id)->withTrashed()->restore();
+
+        return redirect()->route('units.index')->with('Unit restored successfully.');
+    }
+
+    public function forceDelete($id)
+    {
+        Unit::where('id', $id)->withTrashed()->forceDelete();
+
+        return redirect()->route('units.index')->with('Unit force deleted successfully.');
+    }
+
 }
