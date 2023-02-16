@@ -14,7 +14,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::withTrashed()->get();
+        $roles = Role::orderby('created_at','DESC')->withTrashed()->get();
         return view('backend.role.index',compact('roles'))->with('i');
     }
 

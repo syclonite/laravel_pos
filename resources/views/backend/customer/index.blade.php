@@ -17,18 +17,32 @@
             </div>
         @endif
         <br>
-        <table class="table table-bordered">
-            <tr>
-                <th>No</th>
-                <th>Customer Name</th>
-                <th>Customer Phone</th>
-                <th>Customer Email</th>
-                <th>Status</th>
-                <th>Address</th>
-                <th>Remarks</th>
-
-                <th colspan="3" class="text-center" >Action</th>
+        <table border="0" cellspacing="5" cellpadding="5">
+            <tbody><tr>
+                <td>Minimum date:</td>
+                <td><input type="text" id="min" name="min"></td>
             </tr>
+            <tr>
+                <td>Maximum date:</td>
+                <td><input type="text" id="max" name="max"></td>
+            </tr>
+            </tbody></table>
+        <br>
+        <table id="example" class="table table-bordered" >
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Customer Name</th>
+                    <th>Customer Phone</th>
+                    <th>Customer Email</th>
+                    <th>Status</th>
+                    <th>Address</th>
+                    <th>Remarks</th>
+                    <th id="created_at">Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
             <tbody>
             @foreach($customers as $customer)
                 <tr>
@@ -39,6 +53,7 @@
                     <td>{{$customer->status}}</td>
                     <td>{{$customer->address}}</td>
                     <td>{{$customer->remarks}}</td>
+                    <td>{{$customer->created_at->format('F d Y')}}</td>
                     <td class="text-center">
                         <a class="btn btn-primary" href="{{route('customers.edit', $customer->id)}}">Edit</a>
                         <form action="{{route('customers.destroy',$customer->id)}}" method="POST">

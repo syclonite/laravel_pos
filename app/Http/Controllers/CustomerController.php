@@ -14,7 +14,7 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $customers = Customer::withTrashed()->get();
+        $customers = Customer::orderby('created_at','DESC')->withTrashed()->get();
         return view('backend.customer.index',compact('customers'))->with('i');
     }
 

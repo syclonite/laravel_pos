@@ -17,17 +17,30 @@
             </div>
         @endif
         <br>
-        <table class="table table-bordered">
-            <tr>
-                <th>No</th>
-                <th>User Name</th>
-                <th>User Phone</th>
-                <th>User Email</th>
-                <th>Status</th>
-                <th>Category Address</th>
-
-                <th colspan="2" class="text-center" >Action</th>
+        <table border="0" cellspacing="5" cellpadding="5">
+            <tbody><tr>
+                <td>Minimum date:</td>
+                <td><input type="text" id="min" name="min"></td>
             </tr>
+            <tr>
+                <td>Maximum date:</td>
+                <td><input type="text" id="max" name="max"></td>
+            </tr>
+            </tbody></table>
+        <br>
+        <table id="example" class="table table-bordered" >
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>User Name</th>
+                    <th>User Phone</th>
+                    <th>User Email</th>
+                    <th>Status</th>
+                    <th>Category Address</th>
+                    <th id="created_at">Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
             <tbody>
             @foreach($users as $user)
                 <tr>
@@ -37,6 +50,7 @@
                     <td>{{$user->email}}</td>
                     <td>{{$user->status}}</td>
                     <td>{{$user->address}}</td>
+                    <td>{{$user->created_at->format('F d Y')}}</td>
                     <td class="text-center">
                         <a class="btn btn-primary" href="{{route('users.edit', $user->id)}}">Edit</a>
                         <form action="{{route('users.destroy',$user->id)}}" method="POST">

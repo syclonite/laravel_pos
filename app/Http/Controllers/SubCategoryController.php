@@ -15,7 +15,7 @@ class SubCategoryController extends Controller
      */
     public function index()
     {
-        $subcategories = SubCategory::withTrashed()->get();
+        $subcategories = SubCategory::orderby('created_at','DESC')->withTrashed()->get();
         return view('backend.subcategory.index',compact('subcategories'))->with('i');
     }
 

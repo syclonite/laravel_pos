@@ -14,7 +14,7 @@ class UnitController extends Controller
      */
     public function index()
     {
-        $units = Unit::withTrashed()->get();
+        $units = Unit::orderby('created_at','DESC')->withTrashed()->get();
         return view('backend.unit.index',compact('units'))->with('i');
     }
 

@@ -17,15 +17,29 @@
             </div>
         @endif
         <br>
-        <table class="table table-bordered">
-            <tr>
-                <th>No</th>
-                <th>Category Name</th>
-                <th>Category Description</th>
-                <th>Status</th>
-
-                <th colspan="2" class="text-center" >Action</th>
+        <table border="0" cellspacing="5" cellpadding="5">
+            <tbody><tr>
+                <td>Minimum date:</td>
+                <td><input type="text" id="min" name="min"></td>
             </tr>
+            <tr>
+                <td>Maximum date:</td>
+                <td><input type="text" id="max" name="max"></td>
+            </tr>
+            </tbody></table>
+        <br>
+        <table class="table table-bordered" id="example">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Category Name</th>
+                    <th>Category Description</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th class="text-center" >Action</th>
+                </tr>
+            </thead>
+
             <tbody>
             @foreach($categories as $category)
                 <tr>
@@ -33,6 +47,7 @@
                     <td>{{$category->category_name}}</td>
                     <td>{{$category->category_description}}</td>
                     <td>{{$category->status}}</td>
+                    <td>{{$category->created_at->format('F d Y')}}</td>
                     <td class="text-center">
                         <a class="btn btn-primary" href="{{route('categories.edit', $category->id)}}">Edit</a>
                         <form action="{{route('categories.destroy',$category->id)}}" method="POST">

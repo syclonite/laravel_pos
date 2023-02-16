@@ -9,7 +9,8 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::withTrashed()->get();
+//        $users = User::withTrashed()->get();
+        $users = User::orderBy('created_at','DESC')->withTrashed()->get();
         return view('backend.user.index',compact('users'))->with('i');
     }
 

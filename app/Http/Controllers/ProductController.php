@@ -15,7 +15,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::withTrashed()->get();
+        $products = Product::orderby('created_at','DESC')->withTrashed()->get();
         return view('backend.products.index',compact('products'))->with('i');
     }
 

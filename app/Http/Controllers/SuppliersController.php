@@ -14,7 +14,7 @@ class SuppliersController extends Controller
      */
     public function index()
     {
-        $suppliers = Suppliers::withTrashed()->get();
+        $suppliers = Suppliers::orderby('created_at','DESC')->withTrashed()->get();
         return view('backend.suppliers.index',compact('suppliers'))->with('i');
     }
 

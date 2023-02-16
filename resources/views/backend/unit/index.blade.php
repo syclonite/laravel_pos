@@ -17,14 +17,29 @@
             </div>
         @endif
         <br>
-        <table class="table table-bordered">
+        <table border="0" cellspacing="5" cellpadding="5">
+            <tbody><tr>
+                <td>Minimum date:</td>
+                <td><input type="text" id="min" name="min"></td>
+            </tr>
+            <tr>
+                <td>Maximum date:</td>
+                <td><input type="text" id="max" name="max"></td>
+            </tr>
+            </tbody></table>
+        <br>
+        <table class="table table-bordered" id="example">
+            <thead>
             <tr>
                 <th>No</th>
                 <th>Unit Name</th>
                 <th>Unit Description</th>
                 <th>Status</th>
-                <th colspan="2" class="text-center" >Action</th>
+                <th id="created_at">Date</th>
+                <th class="text-center" >Action</th>
             </tr>
+            </thead>
+
             <tbody>
             @foreach($units as $unit)
                 <tr>
@@ -32,6 +47,7 @@
                     <td>{{$unit->unit_name}}</td>
                     <td>{{$unit->unit_description}}</td>
                     <td>{{$unit->status}}</td>
+                    <td>{{$unit->created_at->format('F d Y')}}</td>
                     <td class="text-center">
                         <a class="btn btn-primary" href="{{route('units.edit', $unit->id)}}">Edit</a>
                         <form action="{{route('units.destroy',$unit->id)}}" method="POST">

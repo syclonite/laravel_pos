@@ -17,7 +17,19 @@
             </div>
         @endif
         <br>
-        <table class="table table-bordered">
+        <table border="0" cellspacing="5" cellpadding="5">
+            <tbody><tr>
+                <td>Minimum date:</td>
+                <td><input type="text" id="min" name="min"></td>
+            </tr>
+            <tr>
+                <td>Maximum date:</td>
+                <td><input type="text" id="max" name="max"></td>
+            </tr>
+            </tbody></table>
+        <br>
+        <table class="table table-bordered" id="example">
+            <thead>
             <tr>
                 <th>No </th>
                 <th>Bill No</th>
@@ -26,9 +38,12 @@
                 <th>Paid Amount</th>
                 <th>Bill By</th>
                 <th>Status</th>
+                <th id="created_at">Date</th>
 
-                <th colspan="2" class="text-center" >Action</th>
+                <th class="text-center" >Action</th>
             </tr>
+            </thead>
+
             <tbody>
             @foreach($sale_orders as $sale_order)
                 <tr>
@@ -39,6 +54,7 @@
                     <td>{{$sale_order->paid_amount}}</td>
                     <td>{{$sale_order->user_id}}</td>
                     <td>{{$sale_order->status}}</td>
+                    <td>{{$sale_order->created_at->format('F d Y')}}</td>
                     <td class="text-center">
                         <form action="{{route('sales.destroy',$sale_order->id)}}" method="POST">
                             <a class="btn btn-primary" href="{{route('sales.edit',$sale_order->id)}}">Edit</a>
