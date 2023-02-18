@@ -60,13 +60,20 @@ Route::post('/units/restore/{id}', [UnitController::class, 'restore'])->name('un
 Route::delete('/units/force-delete/{id}', [UnitController::class, 'forceDelete'])->name('units.force_delete');
 
 Route::resource('sales',SaleOrderController::class);
+
 Route::resource('expenses',ExpenseController::class);
+Route::post('/expenses/restore/{id}', [ExpenseController::class, 'expense_restore'])->name('expenses.restore');
+Route::delete('/expenses/force-delete/{id}', [ExpenseController::class, 'expense_forceDelete'])->name('expenses.force_delete');
+
 Route::get('/expense_record/index',[ExpenseController::class,'expense_record_index'])->name('expense_record.index');
 Route::get('/expense_record/create',[ExpenseController::class,'expense_record_create'])->name('expense_record.create');
 Route::post('/expense_record/store',[ExpenseController::class,'expense_record_store'])->name('expense_record.store');
 Route::get('/expense_record/edit/{id}',[ExpenseController::class,'expense_record_edit'])->name('expense_record.edit');
 Route::put('/expense_record/update/{id}',[ExpenseController::class,'expense_record_update'])->name('expense_record.update');
 Route::delete('/expense_record/delete/{id}',[ExpenseController::class,'expanse_record_destroy'])->name('expense_record.destroy');
+Route::post('/expense_record/restore/{id}', [ExpenseController::class, 'expense_record_restore'])->name('expense_record.restore');
+Route::delete('/expense_record/force-delete/{id}', [ExpenseController::class, 'expense_record_forceDelete'])->name('expense_record.force_delete');
+
 
 Route::get('/purchase',[PurchaseOrderController::class, 'index'])->name('purchase.index');
 Route::get('/purchase/create',[PurchaseOrderController::class, 'create'])->name('purchase.create');

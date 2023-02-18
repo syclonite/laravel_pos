@@ -54,11 +54,27 @@
                     <td>{{$expense_record->status}}</td>
                     <td>{{$expense_record->created_at->format('F d Y')}}</td>
                     <td class="text-center">
+                        <a class="btn btn-primary" href="{{route('expense_record.edit', $expense_record->id)}}">Edit</a>
                         <form action="{{route('expense_record.destroy',$expense_record->id)}}" method="POST">
-                            <a class="btn btn-primary" href="{{route('expense_record.edit',$expense_record->id)}}">Edit</a>
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                            @if($expense_record->deleted_at == null || $expense_record->deleted_at == '')
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"  class="btn btn-danger">Delete</button>
+                            @endif
+                        </form>
+                        <form action="{{route('expense_record.restore',$expense_record->id)}}" method="POST">
+                            @if($expense_record->deleted_at != null || $expense_record->deleted_at != '')
+                                @csrf
+                                @method('POST')
+                                <button type="submit"  class="btn btn-success">Restore</button>
+                            @endif
+                        </form>
+                        <form action="{{route('expense_record.force_delete',$expense_record->id)}}" method="POST">
+                            @if($expense_record->deleted_at != null || $expense_record->deleted_at != '')
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"  class="btn btn-warning">Force Delete</button>
+                            @endif
                         </form>
                     </td>
                 </tr>

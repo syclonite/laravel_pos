@@ -36,8 +36,7 @@
               <th>Remarks</th>
               <th>Status</th>
               <th id="created_at">Date</th>
-
-              <th  class="text-center" >Action</th>
+              <th class="text-center" >Action</th>
           </tr>
           </thead>
             <tbody>
@@ -49,11 +48,27 @@
                     <td>{{$expense->status}}</td>
                     <td>{{$expense->created_at->format('F d Y')}}</td>
                     <td class="text-center">
+                        <a class="btn btn-primary" href="{{route('expenses.edit', $expense->id)}}">Edit</a>
                         <form action="{{route('expenses.destroy',$expense->id)}}" method="POST">
-                            <a class="btn btn-primary" href="{{route('expenses.edit',$expense->id)}}">Edit</a>
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                            @if($expense->deleted_at == null || $expense->deleted_at == '')
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"  class="btn btn-danger">Delete</button>
+                            @endif
+                        </form>
+                        <form action="{{route('expenses.restore',$expense->id)}}" method="POST">
+                            @if($expense->deleted_at != null || $expense->deleted_at != '')
+                                @csrf
+                                @method('POST')
+                                <button type="submit"  class="btn btn-success">Restore</button>
+                            @endif
+                        </form>
+                        <form action="{{route('expenses.force_delete',$expense->id)}}" method="POST">
+                            @if($expense->deleted_at != null || $expense->deleted_at != '')
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"  class="btn btn-warning">Force Delete</button>
+                            @endif
                         </form>
                     </td>
                 </tr>
