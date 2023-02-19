@@ -193,7 +193,7 @@
             var data = [];
             var product_id,quantity, product_price,unit_id;
             // return alert(payment_status);
-            $("table tbody tr").each(function(index) {
+            $("#myTable > tbody >tr").each(function(index) {
                 product_id = parseInt($(this).find('.product_id').text());
                 quantity = parseInt($(this).find('.quantity').text());
                 product_price = parseFloat($(this).find('.product_price').text());

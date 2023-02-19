@@ -4,6 +4,7 @@
     <title>Dashboard</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link href="{{url('css/backend_bootstrap_5.1.min.css')}}" rel="stylesheet"  crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="{{url('js/jquery.min.js')}}"></script>
     <script src="{{url('js/backend_popper.min.js')}}"  crossorigin="anonymous"></script>
     <script src="{{url('js/backend_bootstrap_5.1.3.min.js')}}"  crossorigin="anonymous"></script>

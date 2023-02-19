@@ -45,7 +45,7 @@ class PurchaseOrderController extends Controller
      */
     public function store(Request $request)
     {
-//        dd($request->all()['purchase_order']);
+//        dd($request->all());
 //        dd($request->all()['purchase_order_details']);
 //        $test = $request['purchase_order']['billing_amount'];
         $purchase_order = new PurchaseOrder([

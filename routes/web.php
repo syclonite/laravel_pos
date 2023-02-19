@@ -65,6 +65,7 @@ Route::resource('expenses',ExpenseController::class);
 Route::post('/expenses/restore/{id}', [ExpenseController::class, 'expense_restore'])->name('expenses.restore');
 Route::delete('/expenses/force-delete/{id}', [ExpenseController::class, 'expense_forceDelete'])->name('expenses.force_delete');
 
+
 Route::get('/expense_record/index',[ExpenseController::class,'expense_record_index'])->name('expense_record.index');
 Route::get('/expense_record/create',[ExpenseController::class,'expense_record_create'])->name('expense_record.create');
 Route::post('/expense_record/store',[ExpenseController::class,'expense_record_store'])->name('expense_record.store');

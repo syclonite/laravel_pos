@@ -164,6 +164,6 @@ class SaleOrderController extends Controller
 //        dd($sale_order);
         $sale_order->delete(); // Easy right?
         return redirect()->route('sales.index')->with('success','Order Deleted.');
-
     }
+
 }

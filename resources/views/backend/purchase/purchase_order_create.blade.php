@@ -148,7 +148,7 @@
         //     $("#selling_price").val(result);
         // };
 
-        $("button#add_list").click(function() {
+        $("#add_list").click(function() {
             // alert('hello');
             var product_id = $("#product_id").val();
             var product_text = $("#product_id option:selected").text();
@@ -160,7 +160,8 @@
             var subtotal = $("#purchase_price").val() * $("#quantity").val();
             // return console.log(expiry_date);
 
-            var new_row = '<tr><td>' + ($('table tbody tr').length+1) + '</td>'+
+            var new_row = '<tr>' +
+                '<td>' + ($('table tbody tr').length+1) + '</td>'+
                 '<td class="product_id" style="display: none">' + product_id + '</td>' +
                 '<td class="product_text">' + product_text + '</td>' +
                 '<td class="unit_id" style="display: none">' + unit_id + '</td>' +
@@ -169,7 +170,7 @@
                 '<td class="purchase_price">' + purchase_price + '</td>'+
                 '<td class="subtotal">' + subtotal + '</td>'+
                 '<td class="selling_price">' + selling_price + '</td>'+
-                '<td><input type="button" value="Delete" onclick="bill_calculation(this)"/></td></tr>';
+                '<td><input type="button" value="Delete" onclick="bill_calculation(this)"/></td>' + '</tr>';
             $("table tbody").append(new_row);
             bill_calculation();
         });
@@ -177,7 +178,7 @@
             $(value).parent().parent().remove()
             var sum_subtotal_amount = 0
             $(".subtotal").each(function(){
-                sum_subtotal_amount += parseFloat($(this).text());
+                 sum_subtotal_amount += parseFloat($(this).text());
                 $("#total_bill").text(sum_subtotal_amount)
             })
             var discount = $('#discount').val();
@@ -200,17 +201,20 @@
             }
 
         }
-        $("button#submit").click(function() {
+        $("#submit").click(function() {
             var data = [];
             var product_id,quantity, purchase_price,selling_price,unit_id;
             // return alert(payment_status);
-            $("table tbody tr").each(function(index) {
+            $('#myTable > tbody > tr').each(function(index,tr) {
+                console.log(index)
+                console.log(tr)
                 product_id = parseInt($(this).find('.product_id').text());
                 quantity = parseInt($(this).find('.quantity').text());
                 purchase_price = parseFloat($(this).find('.purchase_price').text());
                 selling_price = parseFloat($(this).find('.selling_price').text());
                 unit_id = parseInt($(this).find('.unit_id').text());
                 data.push({
+
                     product_id,
                     unit_id,
                     quantity,
