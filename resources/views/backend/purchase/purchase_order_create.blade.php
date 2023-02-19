@@ -28,7 +28,7 @@
     {{--        @csrf--}}
 
     <div class="row">
-        <div class="col-xs-6 col-sm-6 col-md-6">
+        <div class="col-xs-4 col-sm-4 col-md-4 mb-4">
             <div class="form-group">
                 <strong>Products</strong>
                 <select name="product_id" id="product_id" class="form-control" >
@@ -39,7 +39,7 @@
                 </select>
             </div>
         </div>
-        <div class="col-xs-6 col-sm-6 col-md-6">
+        <div class="col-xs-4 col-sm-4 col-md-4">
             <div class="form-group">
                 <strong>Units:</strong>
                 <select name="unit_id" id="unit_id" class="form-control" >
@@ -50,29 +50,29 @@
                 </select>
             </div>
         </div>
-        <div class="col-xs-6 col-sm-6 col-md-6">
+        <div class="col-xs-4 col-sm-4 col-md-4">
             <div class="form-group">
                 <strong>Quantity</strong>
-                <input type="text" name="quantity" class="form-control" placeholder="Quantity" id="quantity">
+                <input type="number" name="quantity" class="form-control" placeholder="Quantity" id="quantity">
             </div>
         </div>
-        <div class="col-xs-6 col-sm-6 col-md-6">
+        <div class="col-xs-4 col-sm-4 col-md-4">
             <div class="form-group">
                 <strong>Purchase Price</strong>
-                <input type="text" name="purchase_price" class="form-control" placeholder="Purchase Price" id="purchase_price">
+                <input type="number" name="purchase_price" class="form-control" placeholder="Purchase Price" id="purchase_price">
             </div>
         </div>
-        <div class="col-xs-6 col-sm-6 col-md-6">
+        <div class="col-xs-4 col-sm-4 col-md-4">
             <div class="form-group">
                 <strong>Sale Price</strong>
-                <input type="text" name="sale_price" class="form-control" placeholder="Sale Price" id="selling_price">
+                <input type="number" name="sale_price" class="form-control" placeholder="Sale Price" id="selling_price">
             </div>
         </div>
-        <div class="col-xs-6 col-sm-6 col-md-6">
+        <div class="col-xs-4 col-sm-4 col-md-4">
             <div class="form-group">
                 <strong>Suppliers:</strong>
                 <select name="supplier_id" id="supplier_id" class="form-control" >
-                    <option value=''>Please choose one...</option>
+                    <option>Please choose one...</option>
                     @foreach($suppliers as $supplier)
                         <option value="{{ $supplier->id }}">{{ $supplier->supplier_name}}</option>
                     @endforeach
@@ -99,6 +99,7 @@
                     <th>Unit</th>
                     <th>Quantity</th>
                     <th>Purchase Price</th>
+                    <th>Subtotal</th>
                     <th>Selling Price</th>
                     <th>Action</th>
                 </tr>
@@ -116,9 +117,11 @@
                         <div class="card">
                             <div class="card-body">
                                 <ul class="list-group">
+                                    <li class="list-group-item">Discount :<input class="form-control" type="number" id="discount" name="discount" onchange="bill_calculation()"></li>
+                                    <li class="list-group-item">Extra Charge :<input class="form-control" type="number" id="extra_charge" name="extra_charge" onchange="bill_calculation()"></li>
                                     <li class="list-group-item">Total Bill: <span  id="total_bill"></span></li>
                                     <li class="list-group-item">Paid Amount :<input class="form-control" type="number" id="paid_amount" onchange="bill_calculation()"></li>
-                                    <li class="list-group-item">Return Amount :<span id="return_amount"></span></li>
+                                    <li class="list-group-item">Change :<span id="change_amount"></span></li>
                                 </ul>
                             </div>
                         </div>
@@ -136,7 +139,7 @@
     </div>
     {{--    </form>--}}
 
-    <script src="{{url('js/jquery.min.js')}}"></script>
+{{--    <script src="{{url('js/jquery.min.js')}}"></script>--}}
     <script>
         // function selling_amount_cal(){
         //     var quantity = $("#quantity").val();
@@ -145,7 +148,7 @@
         //     $("#selling_price").val(result);
         // };
 
-        $("button#add_list").click(function() {
+        $("#add_list").click(function() {
             // alert('hello');
             var product_id = $("#product_id").val();
             var product_text = $("#product_id option:selected").text();
@@ -154,51 +157,64 @@
             var unit_id = $("#unit_id").val();
             var unit_text = $("#unit_id option:selected").text();
             var selling_price = $("#selling_price").val();
+            var subtotal = $("#purchase_price").val() * $("#quantity").val();
             // return console.log(expiry_date);
 
-            var new_row = '<tr><td>' + ($('table tbody tr').length+1) + '</td>'+
+            var new_row = '<tr>' +
+                '<td>' + ($('table tbody tr').length+1) + '</td>'+
                 '<td class="product_id" style="display: none">' + product_id + '</td>' +
                 '<td class="product_text">' + product_text + '</td>' +
                 '<td class="unit_id" style="display: none">' + unit_id + '</td>' +
                 '<td class="unit_text">' + unit_text + '</td>' +
                 '<td class="quantity">' + quantity + '</td>' +
                 '<td class="purchase_price">' + purchase_price + '</td>'+
+                '<td class="subtotal">' + subtotal + '</td>'+
                 '<td class="selling_price">' + selling_price + '</td>'+
-                '<td><input type="button" value="Delete" onclick="bill_calculation(this)"/></td></tr>';
+                '<td><input type="button" value="Delete" onclick="bill_calculation(this)"/></td>' + '</tr>';
             $("table tbody").append(new_row);
             bill_calculation();
         });
         function bill_calculation(value){
             $(value).parent().parent().remove()
-            var sum_purchase_amount = 0
-            $(".purchase_price").each(function(){
-                sum_purchase_amount += parseFloat($(this).text());
-                console.log(sum_purchase_amount);
-                $("#total_bill").text(sum_purchase_amount)
+            var sum_subtotal_amount = 0
+            $(".subtotal").each(function(){
+                 sum_subtotal_amount += parseFloat($(this).text());
+                $("#total_bill").text(sum_subtotal_amount)
             })
-            // var total_bill = sum_purchase_amount
-            // var paid_amount = $("#paid_amount").val();
-            // if (total_bill >= paid_amount){
-            //     return_amount = total_bill - paid_amount;
-            //     $("#return_amount").text(return_amount);
+            var discount = $('#discount').val();
+            // var extra_charge = $('#extra_charge').val();
+            var total_bill = sum_subtotal_amount;
+            if( discount != '' || extra_charge != ''){
+               var result_1 = (total_bill - discount);
+               var result_2 =  parseInt(result_1) + Number($('#extra_charge').val());
+               // console.log(result_2);
+                $("#total_bill").text(result_2);
+            }
+            var paid_amount = $("#paid_amount").val();
+            if (result_2 >= paid_amount){
+               var change_amount = result_2 - paid_amount;
+                $("#change_amount").text(change_amount);
             //     // alert("if condition");
-            // }else{
-            //     return_amount = paid_amount - total_bill;
-            //     $("#return_amount").text(return_amount);
-            // }
+            }else{
+                change_amount = paid_amount - result_2;
+                $("#change_amount").text(change_amount);
+            }
 
         }
-        $("button#submit").click(function() {
+        $("#submit").click(function() {
             var data = [];
             var product_id,quantity, purchase_price,selling_price,unit_id;
             // return alert(payment_status);
-            $("table tbody tr").each(function(index) {
+            $('#myTable > tbody > tr').each(function(index,tr) {
+                console.log(index)
+                console.log(tr)
                 product_id = parseInt($(this).find('.product_id').text());
                 quantity = parseInt($(this).find('.quantity').text());
                 purchase_price = parseFloat($(this).find('.purchase_price').text());
                 selling_price = parseFloat($(this).find('.selling_price').text());
                 unit_id = parseInt($(this).find('.unit_id').text());
                 data.push({
+
                     product_id,
                     unit_id,
                     quantity,
@@ -238,6 +254,7 @@
         //     payment_status_value;
         //     submit_stock_order(data,payment_status_value)
         // }
+
         function submit_purchase(data){
             // return console.log(data);
             // return console.log("percentage status_value:"+value)
@@ -254,6 +271,8 @@
                         supplier_id: $("#supplier_id").val(),
                         paid_amount: $("#paid_amount").val(),
                         billing_amount: parseFloat($("#total_bill").text()),
+                        extra_charge: $("#extra_charge").val(),
+                        discount: $("#discount").val(),
                     },
                     success: function (data) {
                         console.log(data)

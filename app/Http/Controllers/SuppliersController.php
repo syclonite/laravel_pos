@@ -14,7 +14,7 @@ class SuppliersController extends Controller
      */
     public function index()
     {
-        $suppliers = Suppliers::all();
+        $suppliers = Suppliers::orderby('created_at','DESC')->withTrashed()->get();
         return view('backend.suppliers.index',compact('suppliers'))->with('i');
     }
 
@@ -97,7 +97,22 @@ class SuppliersController extends Controller
      */
     public function destroy(Suppliers $supplier)
     {
-        $supplier   ->delete(); // Easy right?
+        $supplier->delete(); // Easy right?
         return redirect()->route('suppliers.index')->with('success','Supplier Deleted.');
     }
+
+    public function restore($id)
+    {
+        Suppliers::where('id', $id)->withTrashed()->restore();
+
+        return redirect()->route('suppliers.index')->with('Supplier restored successfully.');
+    }
+
+    public function forceDelete($id)
+    {
+        Suppliers::where('id', $id)->withTrashed()->forceDelete();
+
+        return redirect()->route('suppliers.index')->with('Suppliers force deleted successfully.');
+    }
+
 }

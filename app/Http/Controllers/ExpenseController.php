@@ -16,7 +16,7 @@ class ExpenseController extends Controller
      */
     public function index()
     {
-        $expenses = Expense::all();
+        $expenses = Expense::orderby('created_at','DESC')->withTrashed()->get();
         return view('backend.expense.index',compact('expenses'))->with('i');
     }
 
@@ -102,13 +102,13 @@ class ExpenseController extends Controller
 
     public function expense_record_index()
     {
-        $expense_records = ExpenseRecord::all();
+        $expense_records = ExpenseRecord::orderby('created_at','DESC')->withTrashed()->get();
         return view('backend.expense.index_expense_record',compact('expense_records'))->with('i');
     }
 
     public function expense_record_create()
     {
-        $expense_category = Expense::all();
+        $expense_category = Expense::get();
         return view('backend.expense.create_expense_record',compact('expense_category'));
 
     }
@@ -136,7 +136,7 @@ class ExpenseController extends Controller
         }
     }
     public function expense_record_edit($id){
-        $expense_categories = Expense::all();
+        $expense_categories = Expense::get();
         $expense_record = ExpenseRecord::find($id)->first();
         $expense_record_details = ExpenseRecordDetail::get()->where('expense_record_id',$id);
         return view('backend.expense.edit_expense_record', compact('expense_record','expense_record_details','expense_categories'))->with('i');
@@ -169,6 +169,35 @@ class ExpenseController extends Controller
     public function expanse_record_destroy($id){
         $expense_record = ExpenseRecord::find($id);
         $expense_record->delete(); // Easy right?
+        ExpenseRecordDetail::where('expense_record_id',$id)->delete();
         return redirect()->route('expense_record.index')->with('success','Bill Deleted.');
     }
+
+    public function expense_restore($id)
+    {
+        Expense::where('id', $id)->withTrashed()->restore();
+        return redirect()->route('expenses.index')->with('Expense Category restored successfully.');
+    }
+
+    public function expense_forceDelete($id)
+    {
+        Expense::where('id', $id)->withTrashed()->forceDelete();
+        return redirect()->route('expenses.index')->with('Expense Category force deleted successfully.');
+    }
+
+    public function expense_record_restore($id)
+    {
+        ExpenseRecord::where('id', $id)->withTrashed()->restore();
+        ExpenseRecordDetail::where('expense_record_id', $id)->withTrashed()->restore();
+        return redirect()->route('expense_record.index')->with('Expense Record restored successfully.');
+    }
+
+    public function expense_record_forceDelete($id)
+    {
+        ExpenseRecord::where('id', $id)->withTrashed()->forceDelete();
+
+        return redirect()->route('expense_record.index')->with('Expense Record force deleted successfully.');
+    }
+
+
 }

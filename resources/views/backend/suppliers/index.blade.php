@@ -17,17 +17,21 @@
             </div>
         @endif
         <br>
-        <table class="table table-bordered">
-            <tr>
-                <th>No</th>
-                <th>Supplier Name</th>
-                <th>Supplier Phone</th>
-                <th>Address</th>
-                <th>Remarks</th>
-                <th>Status</th>
+        <table class="table table-bordered" id="example">
+           <thead>
+           <tr>
+               <th>No</th>
+               <th>Supplier Name</th>
+               <th>Supplier Phone</th>
+               <th>Address</th>
+               <th>Remarks</th>
+               <th>Status</th>
+               <th id="created_at">Date</th>
 
-                <th colspan="2" class="text-center" >Action</th>
-            </tr>
+               <th class="text-center" >Action</th>
+           </tr>
+           </thead>
+
             <tbody>
             @foreach($suppliers as $supplier)
                 <tr>
@@ -37,12 +41,29 @@
                     <td>{{$supplier->address}}</td>
                     <td>{{$supplier->remarks}}</td>
                     <td>{{$supplier->status}}</td>
+                    <td>{{$supplier->created_at->format('F d Y')}}</td>
                     <td class="text-center">
+                        <a class="btn btn-primary" href="{{route('suppliers.edit', $supplier->id)}}">Edit</a>
                         <form action="{{route('suppliers.destroy',$supplier->id)}}" method="POST">
-                            <a class="btn btn-primary" href="{{route('suppliers.edit', $supplier->id)}}">Edit</a>
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                            @if($supplier->deleted_at == null || $supplier->deleted_at == '')
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"  class="btn btn-danger">Delete</button>
+                            @endif
+                        </form>
+                        <form action="{{route('suppliers.restore',$supplier->id)}}" method="POST">
+                            @if($supplier->deleted_at != null || $supplier->deleted_at != '')
+                                @csrf
+                                @method('POST')
+                                <button type="submit"  class="btn btn-success">Restore</button>
+                            @endif
+                        </form>
+                        <form action="{{route('suppliers.force_delete',$supplier->id)}}" method="POST">
+                            @if($supplier->deleted_at != null || $supplier->deleted_at != '')
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"  class="btn btn-warning">Force Delete</button>
+                            @endif
                         </form>
                     </td>
                 </tr>

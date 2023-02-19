@@ -4,8 +4,24 @@
     <title>Dashboard</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link href="{{url('css/backend_bootstrap_5.1.min.css')}}" rel="stylesheet"  crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="{{url('js/jquery.min.js')}}"></script>
     <script src="{{url('js/backend_popper.min.js')}}"  crossorigin="anonymous"></script>
     <script src="{{url('js/backend_bootstrap_5.1.3.min.js')}}"  crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/1.13.2/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/datetime/1.3.0/css/dataTables.dateTime.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/buttons/2.3.4/css/buttons.dataTables.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.2/moment.min.js"></script>
+    <script src="https://cdn.datatables.net/datetime/1.3.0/js/dataTables.dateTime.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.4/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.4/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.4/js/buttons.print.min.js"></script>
 </head>
 <body>
 @include('backend.partials.navbar')
@@ -63,8 +79,16 @@
                             <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Sale Management</span></a>
                     </li>
                     <li>
-                        <a href="{{route('expenses.index')}}" class="nav-link px-0 align-middle text-dark">
+                        <a href="#expense" class="nav-link px-0 align-middle text-dark" data-bs-toggle="collapse">
                             <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Expense Management</span></a>
+                        <ul class="collapse nav flex-column ms-1" id="expense" data-bs-parent="#menu">
+                            <li class="w-100 text-dark">
+                                <a href="{{route('expenses.index')}}" class="nav-link px-0"> <span class="d-none d-sm-inline">Expense Category</span></a>
+                            </li>
+                            <li class="text-dark">
+                                <a href="{{route('expense_record.index')}}" class="nav-link px-0"> <span class="d-none d-sm-inline">Expense Record</span></a>
+                            </li>
+                        </ul>
                     </li>
                     <li>
                         <a href="#submenu3" class="nav-link px-0 align-middle text-dark" data-bs-toggle="collapse">
@@ -97,6 +121,55 @@
     </div>
 </div>
 </body>
-
 </html>
+
+<script>
+    var minDate, maxDate;
+
+    // Custom filtering function which will search data in column four between two values
+    $.fn.dataTable.ext.search.push(
+        function( settings, data, dataIndex ) {
+            var min = minDate.val();
+            var max = maxDate.val();
+            // console.log($('#created_at').siblings().length - 1);
+            var count_header = $('#created_at').siblings().length - 1;
+            var date = new Date( data[count_header]);
+
+            if (
+                ( min === null && max === null ) ||
+                ( min === null && date <= max ) ||
+                ( min <= date   && max === null ) ||
+                ( min <= date   && date <= max )
+            ) {
+                return true;
+            }
+            return false;
+        }
+    );
+
+    $(document).ready(function() {
+        $("select").select2();
+        // Create date inputs
+        minDate = new DateTime($('#min'), {
+            format: 'MMMM Do YYYY'
+        });
+        maxDate = new DateTime($('#max'), {
+            format: 'MMMM Do YYYY'
+        });
+
+        // DataTables initialisation
+        var table = $('#example').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'excel', 'pdf', 'print'
+            ]
+        });
+
+        // Refilter the table
+        $('#min, #max').on('change', function () {
+            table.draw();
+        });
+    });
+
+</script>
 

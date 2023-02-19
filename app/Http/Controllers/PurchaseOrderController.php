@@ -45,7 +45,7 @@ class PurchaseOrderController extends Controller
      */
     public function store(Request $request)
     {
-//        dd($request->all()['purchase_order']);
+//        dd($request->all());
 //        dd($request->all()['purchase_order_details']);
 //        $test = $request['purchase_order']['billing_amount'];
         $purchase_order = new PurchaseOrder([
@@ -53,6 +53,8 @@ class PurchaseOrderController extends Controller
             'user_id' => '2',
             'billing_amount' => $request['purchase_order']['billing_amount'],
             'paid_amount' => $request['purchase_order']['paid_amount'],
+            'extra_charge' => $request['purchase_order']['extra_charge'],
+            'discount' => $request['purchase_order']['discount'],
             'status' => '1',
         ]);
         $purchase_order->save();
@@ -123,11 +125,14 @@ class PurchaseOrderController extends Controller
      */
     public function update(Request $request, $id)
     {
+//        dd($request->all());
         $purchase_order = PurchaseOrder::find($id);
         $purchase_order->supplier_id = $request['purchase_order']['supplier_id'];
         $purchase_order->user_id = '2';
         $purchase_order->billing_amount = $request['purchase_order']['billing_amount'];
         $purchase_order->paid_amount = $request['purchase_order']['paid_amount'];
+        $purchase_order->extra_charge = $request['purchase_order']['extra_charge'];
+        $purchase_order->discount = $request['purchase_order']['discount'];
         $purchase_order->status = '1';
         $purchase_order->save();
         $purchase_order_details = $request['purchase_order_details'];

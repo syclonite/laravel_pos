@@ -17,16 +17,31 @@
             </div>
         @endif
         <br>
-        <table class="table table-bordered">
-            <tr>
-                <th>No</th>
-                <th>SubCategory Name</th>
-                <th>SubCategory Description</th>
-                <th>Category Name</th>
-                <th>Status</th>
-
-                <th colspan="2" class="text-center" >Action</th>
+        <table border="0" cellspacing="5" cellpadding="5">
+            <tbody><tr>
+                <td>Minimum date:</td>
+                <td><input type="text" id="min" name="min"></td>
             </tr>
+            <tr>
+                <td>Maximum date:</td>
+                <td><input type="text" id="max" name="max"></td>
+            </tr>
+            </tbody></table>
+        <br>
+        <table class="table table-bordered" id="example">
+           <thead>
+           <tr>
+               <th>No</th>
+               <th>SubCategory Name</th>
+               <th>SubCategory Description</th>
+               <th>Category Name</th>
+               <th>Status</th>
+               <th id="created_at">Date</th>
+
+               <th class="text-center" >Action</th>
+           </tr>
+           </thead>
+
             <tbody>
             @foreach($subcategories as $subcategory)
                 <tr>
@@ -35,12 +50,29 @@
                     <td>{{$subcategory->subcategory_description}}</td>
                     <td>{{$subcategory->category->category_name}}</td>
                     <td>{{$subcategory->status}}</td>
+                    <td>{{$subcategory->created_at->format('F d Y')}}</td>
                     <td class="text-center">
+                        <a class="btn btn-primary" href="{{route('subcategories.edit', $subcategory->id)}}">Edit</a>
                         <form action="{{route('subcategories.destroy',$subcategory->id)}}" method="POST">
-                            <a class="btn btn-primary" href="{{route('subcategories.edit', $subcategory->id)}}">Edit</a>
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                            @if($subcategory->deleted_at == null || $subcategory->deleted_at == '')
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"  class="btn btn-danger">Delete</button>
+                            @endif
+                        </form>
+                        <form action="{{route('subcategories.restore',$subcategory->id)}}" method="POST">
+                            @if($subcategory->deleted_at != null || $subcategory->deleted_at != '')
+                                @csrf
+                                @method('POST')
+                                <button type="submit"  class="btn btn-success">Restore</button>
+                            @endif
+                        </form>
+                        <form action="{{route('subcategories.force_delete',$subcategory->id)}}" method="POST">
+                            @if($subcategory->deleted_at != null || $subcategory->deleted_at != '')
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"  class="btn btn-warning">Force Delete</button>
+                            @endif
                         </form>
                     </td>
                 </tr>

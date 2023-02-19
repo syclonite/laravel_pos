@@ -30,19 +30,19 @@
         <div class="col-xs-6 col-sm-6 col-md-6">
             <div class="form-group">
                 <strong>Bill No:</strong>
-                <input type="text" name="" class="form-control" id="bill_no" value="{{$purchase_order->id}}"  >
+                <input type="text" name="" class="form-control" id="bill_no" value="{{$purchase_order->id}}"  disabled>
             </div>
         </div>
         <div class="col-xs-6 col-sm-6 col-md-6">
             <div class="form-group">
                 <strong>Billing Amount:</strong>
-                <input id="billing_amount" class="form-control" type="text" name="billing_amount" value="{{$purchase_order->billing_amount}}" >
+                <input id="billing_amount" class="form-control" type="text" name="billing_amount" value="{{$purchase_order->billing_amount}}" disabled>
             </div>
         </div>
         <div class="col-xs-6 col-sm-6 col-md-6">
             <div class="form-group">
                 <strong>Paid Amount:</strong>
-                <input class="form-control" type="text" name="paid_amount" id="paid_amount"  value="{{$purchase_order->paid_amount}}" disabled>
+                <input class="form-control" type="text" name="paid_amount" id="paid_amount"  value="{{$purchase_order->paid_amount}}" >
             </div>
         </div>
         <div class="col-xs-6 col-sm-6 col-md-6">
@@ -64,6 +64,19 @@
                 </select>
             </div>
         </div>
+        <div class="col-xs-6 col-sm-6 col-md-6">
+            <div class="form-group">
+                <strong>Extra Charge:</strong>
+                <input class="form-control" type="text" name="extra_charge" id="extra_charge" onchange="subtotal_calculation()" value="{{$purchase_order->extra_charge}}" >
+            </div>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6">
+            <div class="form-group">
+                <strong>Discount:</strong>
+                <input class="form-control" type="text" name="discount" id="discount" onchange="subtotal_calculation()" value="{{$purchase_order->discount}}" >
+            </div>
+        </div>
+
     </div><br>
     <table id="myTable" class="table table-striped table-light table-bordered">
         <thead>
@@ -89,10 +102,10 @@
                 </select>
             </td>
             <td>
-                <input id="purchase_amount" class="form-control" type="text" name="purchase_amount"  value="{{$purchase_order_detail->purchase_amount}}">
+                <input id="purchase_amount" class="form-control" type="text" name="purchase_amount"  onchange="subtotal_calculation()" value="{{$purchase_order_detail->purchase_amount}}">
             </td>
             <td>
-                <input id="quantity" class="form-control quantity" type="text" name="quantity"  value="{{$purchase_order_detail->quantity}}">
+                <input id="quantity" class="form-control quantity" type="text" name="quantity" onchange="subtotal_calculation()" value="{{$purchase_order_detail->quantity}}">
             </td>
             <td>
                 <select id="unit_id" name="unit_id" id="" class="form-control unit_id" >
@@ -114,7 +127,8 @@
     <button type="button" class="btn btn-primary col-2 col-md-2 col-sm-2 savebtn" id="submit" >Update</button>
     {{--    </form>--}}
 
-    <script src="{{url('js/jquery.min.js')}}"></script>
+{{--    <script src="{{url('js/jquery.min.js')}}"></script>--}}
+
     <script>
         $("button#submit").click(function() {
             var data = [];
@@ -126,6 +140,7 @@
                 purchase_price = parseInt($(this).find('#purchase_amount').val());
                 selling_price = parseInt($(this).find('#selling_amount').val());
                 unit_id = parseInt($(this).find('#unit_id').val());
+
                 // console.log(index);
                 // console.log(tr);
                 data.push({
@@ -147,6 +162,25 @@
             }
 
         });
+
+        function subtotal_calculation(){
+            var sum_subtotal = 0
+            $("table > tbody  > tr").each(function(index, tr) {
+                var subtotal = parseInt($(this).find('#purchase_amount').val()) * parseInt($(this).find('#quantity').val());
+                parseInt($(this).find('#subtotal').val(subtotal));
+                sum_subtotal += subtotal;
+            })
+                // alert(sum_subtotal);
+                var discount = $('#discount').val();
+                var extra_charge = $('#extra_charge').val();
+                var total_bill = sum_subtotal;
+                if( discount != '' || extra_charge != ''){
+                    var result_1 = (total_bill - discount);
+                    var result_2 =  parseInt(result_1) + Number($('#extra_charge').val());
+                    $("#billing_amount").val(result_2);
+                }
+
+        }
 
         function showmsg(){
             alert("Order Updated")
@@ -170,6 +204,8 @@
                         supplier_id: $("#supplier_id").val(),
                         paid_amount: $("#paid_amount").val(),
                         billing_amount: $("#billing_amount").val(),
+                        extra_charge: $("#extra_charge").val(),
+                        discount: $("#discount").val(),
                     },
                     success: function (data) {
                         console.log(data)

@@ -9,7 +9,8 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::all();
+//        $users = User::withTrashed()->get();
+        $users = User::orderBy('created_at','DESC')->withTrashed()->get();
         return view('backend.user.index',compact('users'))->with('i');
     }
 
@@ -97,4 +98,18 @@ class UserController extends Controller
 
         return redirect()->route('users.index')->with('success','User Deleted.');
     }
+    public function restore($id)
+    {
+        User::where('id', $id)->withTrashed()->restore();
+
+        return redirect()->route('users.index')->with('User restored successfully.');
+    }
+
+    public function forceDelete($id)
+    {
+        User::where('id', $id)->withTrashed()->forceDelete();
+
+        return redirect()->route('users.index')->with('User force deleted successfully.');
+    }
+
 }

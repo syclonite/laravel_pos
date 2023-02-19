@@ -14,7 +14,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::all();
+        $roles = Role::orderby('created_at','DESC')->withTrashed()->get();
         return view('backend.role.index',compact('roles'))->with('i');
     }
 
@@ -96,5 +96,18 @@ class RoleController extends Controller
         $role->delete(); // Easy right?
 
         return redirect()->route('roles.index')->with('success','Role Deleted.');
+    }
+    public function restore($id)
+    {
+        Role::where('id', $id)->withTrashed()->restore();
+
+        return redirect()->route('roles.index')->with('Role restored successfully.');
+    }
+
+    public function forceDelete($id)
+    {
+        Role::where('id', $id)->withTrashed()->forceDelete();
+
+        return redirect()->route('roles.index')->with('Role force deleted successfully.');
     }
 }

@@ -95,6 +95,7 @@
                     <th>Price</th>
                     <th>Unit</th>
                     <th>Quantity</th>
+                    <th>Subtotal</th>
                     <th>Action</th>
                 </tr>
                 </thead>
@@ -111,9 +112,11 @@
                         <div class="card">
                             <div class="card-body">
                                 <ul class="list-group">
+                                    <li class="list-group-item">Discount :<input class="form-control" type="number" id="discount" name="discount" onchange="bill_calculation()"></li>
+                                    <li class="list-group-item">Extra Charge :<input class="form-control" type="number" id="extra_charge" name="extra_charge" onchange="bill_calculation()"></li>
                                     <li class="list-group-item">Total Bill: <span  id="total_bill"></span></li>
                                     <li class="list-group-item">Paid Amount :<input class="form-control" type="number" id="paid_amount" onchange="bill_calculation()"></li>
-                                    <li class="list-group-item">Return Amount :<span id="return_amount"></span></li>
+                                    <li class="list-group-item">Return Amount :<span id="change_amount"></span></li>
                                 </ul>
                             </div>
                         </div>
@@ -130,7 +133,6 @@
     </div>
     {{--    </form>--}}
 
-    <script src="{{url('js/jquery.min.js')}}"></script>
     <script>
 
         $("button#add_list").click(function() {
@@ -143,6 +145,7 @@
             var unit_text = $("#unit_id option:selected").text();
             var customer_id = $("#customer_id").val();
             var customer_text = $("#customer_id option:selected").text();
+            var subtotal = $("#product_price").val() * $("#quantity").val();
             // return console.log(expiry_date);
 
             var new_row = '<tr><td>' + ($('table tbody tr').length+1) + '</td>'+
@@ -154,25 +157,43 @@
                 '<td class="unit_id" style="display: none">' + unit_id + '</td>' +
                 '<td class="unit_text">' + unit_text + '</td>' +
                 '<td class="quantity">' + quantity + '</td>' +
+                '<td class="subtotal">' + subtotal + '</td>' +
                 '<td><input type="button" value="Delete" onclick="bill_calculation(this)"/></td></tr>';
             $("table tbody").append(new_row);
             bill_calculation();
         });
         function bill_calculation(value){
             $(value).parent().parent().remove()
-            var sum_purchase_amount = 0
-            $(".product_price").each(function(){
-                sum_purchase_amount += parseFloat($(this).text());
-                console.log(sum_purchase_amount);
-                $("#total_bill").text(sum_purchase_amount)
+            var sum_subtotal_amount = 0
+            $(".subtotal").each(function(){
+                sum_subtotal_amount += parseFloat($(this).text());
+                $("#total_bill").text(sum_subtotal_amount)
             })
+            var discount = $('#discount').val();
+            // var extra_charge = $('#extra_charge').val();
+            var total_bill = sum_subtotal_amount;
+            if( discount != '' || extra_charge != ''){
+                var result_1 = (total_bill - discount);
+                var result_2 =  parseInt(result_1) + Number($('#extra_charge').val());
+                // console.log(result_2);
+                $("#total_bill").text(result_2);
+            }
+            var paid_amount = $("#paid_amount").val();
+            if (result_2 >= paid_amount){
+                var change_amount = result_2 - paid_amount;
+                $("#change_amount").text(change_amount);
+                //     // alert("if condition");
+            }else{
+                change_amount = paid_amount - result_2;
+                $("#change_amount").text(change_amount);
+            }
         }
 
         $("button#submit").click(function() {
             var data = [];
             var product_id,quantity, product_price,unit_id;
             // return alert(payment_status);
-            $("table tbody tr").each(function(index) {
+            $("#myTable > tbody >tr").each(function(index) {
                 product_id = parseInt($(this).find('.product_id').text());
                 quantity = parseInt($(this).find('.quantity').text());
                 product_price = parseFloat($(this).find('.product_price').text());
@@ -217,6 +238,8 @@
                         customer_id: $("#customer_id").val(),
                         paid_amount: $("#paid_amount").val(),
                         billing_amount: parseFloat($("#total_bill").text()),
+                        extra_charge: $("#extra_charge").val(),
+                        discount: $("#discount").val(),
                     },
                     success: function (data) {
                         console.log(data)

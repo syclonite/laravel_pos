@@ -15,7 +15,7 @@ class SubCategoryController extends Controller
      */
     public function index()
     {
-        $subcategories = SubCategory::get();
+        $subcategories = SubCategory::orderby('created_at','DESC')->withTrashed()->get();
         return view('backend.subcategory.index',compact('subcategories'))->with('i');
     }
 
@@ -98,4 +98,18 @@ class SubCategoryController extends Controller
 
         return redirect()->route('subcategories.index')->with('success','Subcategory Deleted.');
     }
+    public function restore($id)
+    {
+        SubCategory::where('id', $id)->withTrashed()->restore();
+
+        return redirect()->route('subcategories.index')->with('Subcategory restored successfully.');
+    }
+
+    public function forceDelete($id)
+    {
+        SubCategory::where('id', $id)->withTrashed()->forceDelete();
+
+        return redirect()->route('subcategories.index')->with('Subcategory force deleted successfully.');
+    }
+
 }

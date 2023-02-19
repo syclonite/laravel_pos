@@ -10,7 +10,7 @@ class PurchaseOrder extends Model
     use HasFactory;
 
     protected $fillable = [
-        'supplier_id','user_id','billing_amount','paid_amount','status'
+        'supplier_id','user_id','billing_amount','paid_amount','status','extra_charge','discount'
     ];
 
     public function purchase_order_details(){
