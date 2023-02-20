@@ -52,8 +52,8 @@
                     <tbody>
                     @foreach($stock_result as $data)
                         <tr>
-                            <td>{{$data->product_id ?? ' '}}</td>
-                            <td>{{$data->unit_id ?? ' '}}</td>
+                            <td>{{$data->product->product_name ?? ' '}}</td>
+                            <td>{{$data->unit->unit_name ?? ' '}}</td>
                             <td>{{$data->total_quantity ?? ' '}}</td>
                         </tr>
                     </tbody>

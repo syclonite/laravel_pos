@@ -23,4 +23,10 @@ class Product extends Model
         return $this->belongsTo(Unit::class);
     }
 
+    public function stockCount()
+    {
+        return $this->hasMany(StockCount::class);
+    }
+
+
 }

@@ -5,7 +5,7 @@ namespace App\CustomClass;
 use App\Models\SaleOrderDetail;
 use App\Models\Stock;
 use App\Models\StockCount;
-use function PHPUnit\Framework\isEmpty;
+use Illuminate\Support\Facades\Mail;
 
 class StockManipulation
 {
@@ -162,6 +162,16 @@ class StockManipulation
            ]);
 
        }
+       $low_stock_count = StockCount::where('total_quantity','<=', 799)->join('products', 'products.id', '=', 'stock_counts.product_id')
+           ->join('units', 'units.id', '=', 'stock_counts.unit_id')
+           ->get(['products.product_name', 'units.unit_name', 'stock_counts.total_quantity']);
+       ;
+        if ($low_stock_count->isNotEmpty()){
+             Mail::send('mail.low_stock_mail',['data' => $low_stock_count] ,function($messages){
+                $messages->to('admin@gmail.com');
+                $messages->subject('Low Stock Product');
+             });
+        }
    }
 
    public function adjust_total_stock($data){

@@ -9,6 +9,7 @@
             </div>
             <div class="pull-right">
                 <a class="btn btn-primary" href="{{route('sales.index')}}"> Back</a>
+                <a class="btn btn-primary" href="#" onclick="generatePDF()"> PDF</a>
             </div>
         </div>
     </div><br>
@@ -132,8 +133,111 @@
         <br>
     </div>
     {{--    </form>--}}
-
+    <script src="https://unpkg.com/jspdf-invoice-template@1.4.0/dist/index.js"></script>
     <script>
+        function generatePDF() {
+            var myTableArray = [];
+            $("#myTable tbody tr").each(function() {
+                var arrayOfThisRow = [];
+                var removal_from_index = [0,1,3,6,10];
+                var tableData = $(this).find('td');
+                if (tableData.length > 0) {
+                    tableData.each(function() { arrayOfThisRow.push($(this).text());});
+                    for (var i = removal_from_index.length -1; i >= 0; i--)
+                        arrayOfThisRow.splice(removal_from_index[i],1);
+                    myTableArray.push(arrayOfThisRow);
+                }
+            });
+            console.log(myTableArray);
+            var props = {
+                outputType: jsPDFInvoiceTemplate.OutputType.Save,
+                returnJsPDFDocObject: true,
+                fileName: "Invoice#{{$sale_order_bill_no + 1}}",
+                orientationLandscape: false,
+                printable: true,
+                compress: true,
+                logo: {
+                    src: "https://raw.githubusercontent.com/edisonneza/jspdf-invoice-template/demo/images/logo.png",
+                    type: 'PNG', //optional, when src= data:uri (nodejs case)
+                    width: 53.33, //aspect ratio = width/height
+                    height: 26.66,
+                    margin: {
+                        top: 0, //negative or positive num, from the current position
+                        left: 0 //negative or positive num, from the current position
+                    }
+                },
+                stamp: {
+                    inAllPages: true, //by default = false, just in the last page
+                    src: "https://raw.githubusercontent.com/edisonneza/jspdf-invoice-template/demo/images/qr_code.jpg",
+                    type: 'JPG', //optional, when src= data:uri (nodejs case)
+                    width: 20, //aspect ratio = width/height
+                    height: 20,
+                    margin: {
+                        top: 0, //negative or positive num, from the current position
+                        left: 0 //negative or positive num, from the current position
+                    }
+                },
+                business: {
+                    name: "Nawshad Enterprise",
+                    address: "Albania, Tirane ish-Dogana, Durres 2001",
+                    phone: "(+355) 069 11 11 111",
+                    email: "email@example.com",
+                    email_1: "info@example.al",
+                    website: "www.example.al",
+                },
+                contact: {
+                    label: "Invoice issued for:",
+                    name: "Client Name",
+                    address: "Albania, Tirane, Astir",
+                    phone: "(+355) 069 22 22 222",
+                    email: "client@website.al",
+                    otherInfo: $("#total_bill").text(),
+                },
+                invoice: {
+                    label: "Invoice #:",
+                    num:  {{$sale_order_bill_no + 1 }},
+                    // invDate: "Payment Date: 01/01/2021 18:12",
+                    // invGenDate: "Invoice Date: 02/02/2021 10:17",
+                    headerBorder: true,
+                    tableBodyBorder: false,
+                    header: [
+                        {
+                            title: "#",
+                            style: {
+                                width: 5
+                            }
+                        },
+                        { title: "Customer"},
+                        { title: "Product"},
+                        { title: "Price"},
+                        { title: "Unit"},
+                        { title: "Quantity"},
+                        { title: "Subtotal"},
+                    ],
+
+                    table: Array.from(myTableArray, (item, index)=>([
+                        index + 1,
+                        item[0],
+                        item[1],
+                        item[2],
+                        item[3],
+                        item[4],
+                        item[5],
+                    ])),
+                    invDescLabel: "Invoice Note",
+                    invDesc: "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary.",
+                },
+                footer: {
+                    text: "The invoice is created on a computer and is valid without the signature and stamp.",
+                },
+                pageEnable: true,
+                pageLabel: "Page ",
+            };
+
+            var pdfObject = jsPDFInvoiceTemplate.default(props);
+            console.log(pdfObject);
+
+        }
 
         $("button#add_list").click(function() {
             // alert('hello');
@@ -148,7 +252,7 @@
             var subtotal = $("#product_price").val() * $("#quantity").val();
             // return console.log(expiry_date);
 
-            var new_row = '<tr><td>' + ($('table tbody tr').length+1) + '</td>'+
+            var new_row = '<tr><td>' + ($('table tbody tr').length + 1) + '</td>'+
                 '<td class="customer_id" style="display: none">' + customer_id + '</td>' +
                 '<td class="customer_text">' + customer_text + '</td>' +
                 '<td class="product_id" style="display: none">' + product_id + '</td>' +
@@ -212,6 +316,7 @@
             }else{
                 // percentage_cal(data)
                 // submit_stock_order(data)
+               // return window.print();
                 submit_purchase(data)
             }
 

@@ -33,7 +33,8 @@ class SaleOrderController extends Controller
         $products = Product::all();
         $units = Unit::all();
         $customers = Customer::all();
-        return view('backend.sale.sale_order_create',compact('products','units','customers'));
+        $sale_order_bill_no = SaleOrder::pluck('id')->last();
+        return view('backend.sale.sale_order_create',compact('products','units','customers','sale_order_bill_no'));
     }
 
     /**
@@ -71,10 +72,11 @@ class SaleOrderController extends Controller
                 'extra_charge' => '0'
             ]);
         }
+
+
         $stocks = new StockManipulation();
         $stocks->reduce_stock($sale_order_details);
         $stocks->reduce_total_stock($request);
-
     }
 
     /**
