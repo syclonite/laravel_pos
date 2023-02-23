@@ -24,7 +24,7 @@ use \App\Http\Controllers\SaleOrderController;
 */
 
 Route::get('/', function () {
-    return view('backend.layout');
+    return view('backend.dashboard');
 });
 Route::resource('products',ProductController::class);
 Route::resource('categories',CategoryController::class);
