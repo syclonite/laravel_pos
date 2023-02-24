@@ -60,6 +60,9 @@ Route::post('/units/restore/{id}', [UnitController::class, 'restore'])->name('un
 Route::delete('/units/force-delete/{id}', [UnitController::class, 'forceDelete'])->name('units.force_delete');
 
 Route::resource('sales',SaleOrderController::class);
+Route::post('sales/customer/',[SaleOrderController::class,'get_customer'])->name('sales.customer_details');
+Route::post('sales/add_customer/',[SaleOrderController::class,'add_new_customer'])->name('sales.add_new_customer');
+Route::post('sales/get_all_customer_ajax/',[SaleOrderController::class,'get_customer_ajax'])->name('sales.ajax_all_customer');
 
 Route::resource('expenses',ExpenseController::class);
 Route::post('/expenses/restore/{id}', [ExpenseController::class, 'expense_restore'])->name('expenses.restore');

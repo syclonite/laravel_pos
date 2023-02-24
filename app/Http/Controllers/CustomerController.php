@@ -37,7 +37,6 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        //
         $customers = new Customer([
             'name' => $request->get('name'),
             'email' => $request->get('email'),

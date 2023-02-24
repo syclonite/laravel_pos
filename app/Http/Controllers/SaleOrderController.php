@@ -32,9 +32,12 @@ class SaleOrderController extends Controller
     {
         $products = Product::all();
         $units = Unit::all();
-        $customers = Customer::all();
+        $customers = Customer::where('name','Walking Customer')->get();
+        $customers_due = Customer::where('name','!=','Walking Customer')->get();
         $sale_order_bill_no = SaleOrder::pluck('id')->last();
-        return view('backend.sale.sale_order_create',compact('products','units','customers','sale_order_bill_no'));
+//        $customers_due_ajax = Customer::where('name','!=','Walking Customer')->get();
+//        return json_encode(array('customer_data'=>$customers_due_ajax));
+        return view('backend.sale.sale_order_create',compact('products','units','customers','sale_order_bill_no','customers_due'));
     }
 
     /**
@@ -53,7 +56,7 @@ class SaleOrderController extends Controller
             'paid_amount' => $request['sale_order']['paid_amount'],
             'extra_charge' => $request['sale_order']['extra_charge'],
             'discount' => $request['sale_order']['discount'],
-            'status' => '1',
+            'status' => $request['sale_order']['status'],
         ]);
         $sale_order->save();
         $sale_order_details = $request['sale_order_details'];
@@ -67,7 +70,7 @@ class SaleOrderController extends Controller
                 'unit_id' => $sale_order_detail['unit_id'],
                 'quantity' => $sale_order_detail['quantity'],
                 'product_selling_price' => $sale_order_detail['product_price'],
-                'status' => '1',
+                'status' => $sale_order_detail['status'],
                 'discount' =>'0',
                 'extra_charge' => '0'
             ]);
@@ -167,5 +170,42 @@ class SaleOrderController extends Controller
         $sale_order->delete(); // Easy right?
         return redirect()->route('sales.index')->with('success','Order Deleted.');
     }
+
+    /**
+     * @param Request $request
+     * @return false|\Illuminate\Http\JsonResponse|string
+     */
+    public function get_customer(Request $request)
+    {
+//        dd($request['id']);
+        $customer_data = Customer::where('id',$request['id'])->first();
+        return json_encode(array('customer_data'=>$customer_data));
+//        return response()->json(['customer_data'=>$customer_data]);
+
+    }
+
+    public function add_new_customer(Request $request)
+    {
+//        dd($request['customers']);
+        $add_customer = new Customer([
+            'name' => $request['customers']['name'],
+            'phone' => $request['customers']['phone'],
+            'address' => $request['customers']['address'],
+            'status' => '1',
+        ]);
+        $add_customer->save();
+    }
+
+    public function get_customer_ajax(Request $request){
+        if ($request == true){
+            $customer_data_ajax = Customer::where('name','!=','Walking Customer')->get();
+            return json_encode(array('customer_data_ajax'=>$customer_data_ajax));
+        }
+
+    }
+
+
+
+
 
 }
