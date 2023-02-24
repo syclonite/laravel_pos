@@ -117,17 +117,20 @@
             </div>
         </div>
 
-        <div class="col py-3 px-5">
+        <div class="col py-2 px-3">
             <h3 class="notice"></h3>
             <h3 class="alert"></h3>
             <main>
                 @yield('content')
-
             </main>
+            <br>
+            <br>
+            @include('backend.partials.footer')
         </div>
     </div>
 </div>
 </body>
+
 </html>
 <script>
     var minDate, maxDate;

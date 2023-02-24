@@ -1,14 +1,16 @@
 @extends('backend.layout')
 
 @section('content')
-    <div id="layoutSidenav_content">
-        <main>
+
             <div class="container-fluid px-1">
-                <h1 class="mt-4">Messrs Nowshad Enterprise</h1>
-                <ol class="breadcrumb mb-5">
-                    <li class="breadcrumb-item active">Dashboard</li>
-                </ol>
+{{--                <h1 class="mt-4">Messrs Nowshad Enterprise</h1>--}}
+                <div class="d-flex justify-content-start"><img src="{{url('images/nowshad_enterprise.jpeg')}}"  style="height: 100px; width: 500px"></div>
+{{--                <ol class="breadcrumb mb-5">--}}
+{{--                    <li class="breadcrumb-item active">Dashboard</li>--}}
+{{--                </ol>--}}
             </div>
+            <br>
+            <br>
 
             <div class="row">
                 <div class="col-xl-4 col-md-6">
@@ -16,7 +18,7 @@
                         <div class="card-body">Monthly Profit</div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link" href="#">View Details</a>
-                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            <div class="small text-white"><i class="fa fa-angle-right"></i></div>
                         </div>
                     </div>
                 </div>
@@ -26,7 +28,7 @@
                         <div class="card-body">Today's Due</div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link" href="#">View Details</a>
-                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            <div class="small text-white"><i class="fa fa-angle-right"></i></div>
                         </div>
                     </div>
                 </div>
@@ -35,7 +37,7 @@
                         <div class="card-body">Total Payable</div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <a class="small text-black stretched-link" href="#">View Details</a>
-                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            <div class="small text-white"><i class="fa fa-angle-right"></i></div>
                         </div>
                     </div>
                 </div>
@@ -49,7 +51,7 @@
                         <div class="card-body">Total Purchase Cost</div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link" href="#">View Details</a>
-                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            <div class="small text-white"><i class="fa fa-angle-right"></i></div>
                         </div>
                     </div>
                 </div>
@@ -59,7 +61,7 @@
                         <div class="card-body">Total Sold</div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link" href="#">View Details</a>
-                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            <div class="small text-white"><i class="fa fa-angle-right"></i></div>
                         </div>
                     </div>
                 </div>
@@ -68,7 +70,7 @@
                         <div class="card-body">Net Profit</div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <a class="small text-black stretched-link" href="#">View Details</a>
-                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            <div class="small text-white"><i class="fa fa-angle-right"></i></div>
                         </div>
                     </div>
                 </div>
@@ -81,7 +83,7 @@
                         <div class="card-body">Total Product</div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link" href="#">View Details</a>
-                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            <div class="small text-white"><i class="fa fa-angle-right"></i></div>
                         </div>
                     </div>
                 </div>
@@ -91,7 +93,7 @@
                         <div class="card-body">Total Receivable</div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <a class="small text-black stretched-link" href="#">View Details</a>
-                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            <div class="small text-white"><i class="fa fa-angle-right"></i></div>
                         </div>
                     </div>
                 </div>
@@ -100,12 +102,9 @@
                         <div class="card-body">Total Supplier</div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link" href="#">View Details</a>
-                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            <div class="small text-white"><i class="fa fa-angle-right"></i></div>
                         </div>
                     </div>
                 </div>
-
             </div>
-        </main>
-    </div>
 @endsection
