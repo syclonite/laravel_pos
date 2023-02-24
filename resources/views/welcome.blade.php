@@ -18,9 +18,10 @@
     <br>
     <br>
     <br>
-    <div>
-        <p class="d-flex justify-content-center zoom-in-out-box">Nawshad Enterprise</p>
-    </div>
+        <div class="container-fluid px-1">
+            <div class="d-flex justify-content-center zoom-in-out-box"><img id="logo_company" src="{{url('images/nowshad_enterprise.jpeg')}}"  style="height: 200px; width: 600px"></div>
+        </div>
+    <br>
     <br>
     <div class="d-flex justify-content-center">
         <a href="{{route('login')}}" class="btn btn-primary btn-lg"> Login </a>
@@ -30,10 +31,10 @@
 
 <div class="zoom-in-out-box"></div>
 <style>
-    p{
-        font-size: 50px;
-        font-family: 'DejaVu Sans Mono';
-    }
+    /*p{*/
+    /*    font-size: 50px;*/
+    /*    font-family: 'DejaVu Sans Mono';*/
+    /*}*/
 
     .zoom-in-out-box {
         animation: zoom-in-zoom-out 3s ease-in;
