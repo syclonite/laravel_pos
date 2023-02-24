@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
@@ -12,7 +13,8 @@ use \App\Http\Controllers\UnitController;
 use \App\Http\Controllers\PurchaseOrderController;
 use \App\Http\Controllers\SaleOrderController;
 use \App\Http\Controllers\ExpenseController;
-
+use \App\Http\Controllers\Auth\LoginController;
+use Illuminate\Support\Facades\Auth;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,10 +25,17 @@ use \App\Http\Controllers\ExpenseController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/login', [LoginController::class, 'show'])->name('login');
 
-Route::get('/', function () {
-    return view('backend.layout');
-});
+Route::post('/login', [LoginController::class, 'handle'])->name('login');
+
+Route::post('/logout', [LoginController::class, 'sign_out'])->name('logout');
+
+Route::get('/dashboard', [DashboardController::class, 'display_dashboard'])->name('dashboard');
+
+Route::get('/', function () { return view('welcome');})->name('welcome');
+
+
 Route::resource('products',ProductController::class);
 Route::post('/products/restore/{id}', [ProductController::class, 'restore'])->name('products.restore');
 Route::delete('/products/force-delete/{id}', [ProductController::class, 'forceDelete'])->name('products.force_delete');
@@ -60,6 +69,9 @@ Route::post('/units/restore/{id}', [UnitController::class, 'restore'])->name('un
 Route::delete('/units/force-delete/{id}', [UnitController::class, 'forceDelete'])->name('units.force_delete');
 
 Route::resource('sales',SaleOrderController::class);
+Route::post('sales/customer/',[SaleOrderController::class,'get_customer'])->name('sales.customer_details');
+Route::post('sales/add_customer/',[SaleOrderController::class,'add_new_customer'])->name('sales.add_new_customer');
+Route::post('sales/get_all_customer_ajax/',[SaleOrderController::class,'get_customer_ajax'])->name('sales.ajax_all_customer');
 
 Route::resource('expenses',ExpenseController::class);
 Route::post('/expenses/restore/{id}', [ExpenseController::class, 'expense_restore'])->name('expenses.restore');

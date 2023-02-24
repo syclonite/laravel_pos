@@ -1,7 +1,7 @@
-<nav class="navbar navbar-expand-lg sticky-top navbar-light bg-white py-3 shadow-sm bg-body rounded">
+<nav class="navbar navbar-expand-lg sticky-top navbar-dark bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand px-3" href="#">Navbar</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <a class="navbar-brand px-3" href="#">Nowshad Enterprise</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="true" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="container collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
@@ -16,10 +16,16 @@
                         <a class="nav-link">Current User</a>
                     </li>
                 <li class="nav-item">
-                    <a type="button" class="btn btn-outline-info nav-link" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-bell"></i><sup>{{$countStock ?? ''}}</sup></a>
+                    <form action="{{ route('logout') }}" method="post">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-danger btn-md">Logout</button>
+                    </form>
+                </li>
+                <li class="nav-item">
+                    <a type="button" class="btn btn-outline-secondary btn-sm nav-link" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-bell"><sup>{{$countStock ?? ''}}</sup></i></a>
                 </li>
                     <li class="nav-item">
-{{--                        <a href="{{route('logout')}}" class="nav-link">Logout</a>--}}
+
                     </li>
 {{--                @else--}}
                     <li class="nav-item">
@@ -52,8 +58,8 @@
                     <tbody>
                     @foreach($stock_result as $data)
                         <tr>
-                            <td>{{$data->product_id ?? ' '}}</td>
-                            <td>{{$data->unit_id ?? ' '}}</td>
+                            <td>{{$data->product->product_name ?? ' '}}</td>
+                            <td>{{$data->unit->unit_name ?? ' '}}</td>
                             <td>{{$data->total_quantity ?? ' '}}</td>
                         </tr>
                     </tbody>
