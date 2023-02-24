@@ -12,7 +12,8 @@ use \App\Http\Controllers\UnitController;
 use \App\Http\Controllers\PurchaseOrderController;
 use \App\Http\Controllers\SaleOrderController;
 use \App\Http\Controllers\ExpenseController;
-
+use \App\Http\Controllers\Auth\LoginController;
+use Illuminate\Support\Facades\Auth;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,10 +24,19 @@ use \App\Http\Controllers\ExpenseController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/login', [LoginController::class, 'show'])
+    ->name('login');
+
+Route::post('/login', [LoginController::class, 'handle'])
+    ->name('login');
+
+Route::post('/logout', [LoginController::class, 'sign_out'])
+    ->name('logout');
 
 Route::get('/', function () {
-    return view('backend.layout');
+    return view('welcome');
 });
+
 Route::resource('products',ProductController::class);
 Route::post('/products/restore/{id}', [ProductController::class, 'restore'])->name('products.restore');
 Route::delete('/products/force-delete/{id}', [ProductController::class, 'forceDelete'])->name('products.force_delete');

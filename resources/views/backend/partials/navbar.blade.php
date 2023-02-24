@@ -16,10 +16,16 @@
                         <a class="nav-link">Current User</a>
                     </li>
                 <li class="nav-item">
-                    <a type="button" class="btn btn-outline-info nav-link" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-bell"></i><sup>{{$countStock ?? ''}}</sup></a>
+                    <form action="{{ route('logout') }}" method="post">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-primary">Logout</button>
+                    </form>
+                </li>
+                <li class="nav-item">
+                    <a type="button" class="btn btn-outline-info btn-sm nav-link" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-bell"></i><sup>{{$countStock ?? ''}}</sup></a>
                 </li>
                     <li class="nav-item">
-{{--                        <a href="{{route('logout')}}" class="nav-link">Logout</a>--}}
+
                     </li>
 {{--                @else--}}
                     <li class="nav-item">
