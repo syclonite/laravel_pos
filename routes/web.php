@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
@@ -24,18 +25,16 @@ use Illuminate\Support\Facades\Auth;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/login', [LoginController::class, 'show'])
-    ->name('login');
+Route::get('/login', [LoginController::class, 'show'])->name('login');
 
-Route::post('/login', [LoginController::class, 'handle'])
-    ->name('login');
+Route::post('/login', [LoginController::class, 'handle'])->name('login');
 
-Route::post('/logout', [LoginController::class, 'sign_out'])
-    ->name('logout');
+Route::post('/logout', [LoginController::class, 'sign_out'])->name('logout');
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/dashboard', [DashboardController::class, 'display_dashboard'])->name('dashboard');
+
+Route::get('/', function () { return view('welcome');})->name('welcome');
+
 
 Route::resource('products',ProductController::class);
 Route::post('/products/restore/{id}', [ProductController::class, 'restore'])->name('products.restore');

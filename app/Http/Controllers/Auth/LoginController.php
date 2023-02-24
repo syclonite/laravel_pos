@@ -20,7 +20,7 @@ class LoginController extends Controller
         ], request()->has('remember'));
 //        dd($success);
         if($success) {
-            return view('backend.layout');
+            return redirect()->route('dashboard');
         }
     }
 
@@ -28,6 +28,6 @@ class LoginController extends Controller
 
         auth()->logout();
 
-        return redirect()->route('login');
+        return redirect()->route('welcome');
     }
 }
