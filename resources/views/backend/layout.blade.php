@@ -37,7 +37,7 @@
         <div class=" col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-light shadow-lg bg-dark"> <!-- Sidebar -->
             <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
                 <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                    <span class="fs-5 d-none d-sm-inline">Dashboard</span>
+                    <i class="fa fa-dashboard"></i><span class="fs-5 ms-1 d-none d-sm-inline">Dashboard</span>
                 </a>
                 <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                     {{--                    <li class="nav-item">--}}
@@ -47,43 +47,43 @@
                     {{--                    </li>--}}
                     <li>
                         <a href="{{route('users.index')}}" class="nav-link px-0 align-middle text-white">
-                            <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">User Management</span></a>
+                            <i class="fa fa-user"></i> <span class="ms-1 d-none d-sm-inline">User Management</span></a>
                     </li>
                     <li>
                         <a href="{{route('customers.index')}}" class="nav-link px-0 align-middle text-white">
-                            <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Customer Management</span></a>
+                            <i class="fa fa-group"></i> <span class="ms-1 d-none d-sm-inline">Customer Management</span></a>
                     </li>
                     <li>
                        <a href="{{route('roles.index')}}" class="nav-link px-0 align-middle text-white">
-                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Role Management</span></a>
+                            <i class="fa fa-universal-access"></i> <span class="ms-1 d-none d-sm-inline">Role Management</span></a>
                     </li>
                     <li>
                         <a href="{{route('categories.index')}}" class="nav-link px-0 align-middle text-white">
-                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Category Management</span></a>
+                            <i class="fa fa-align-justify"></i> <span class="ms-1 d-none d-sm-inline">Category Management</span></a>
                     </li>
                     <li>
                         <a href="{{route('subcategories.index')}}" class="nav-link px-0 align-middle text-white">
-                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Subcategory Management</span></a>
+                            <i class="fa fa-align-justify"></i> <span class="ms-1 d-none d-sm-inline">Subcategories</span></a>
                     </li>
                     <li>
                         <a href="{{route('products.index')}}" class="nav-link px-0 align-middle text-white">
-                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Product Management</span></a>
+                            <i class="fa fa-cubes"></i> <span class="ms-1 d-none d-sm-inline">Product Management</span></a>
                     </li>
                     <li>
                         <a href="{{route('suppliers.index')}}" class="nav-link px-0 align-middle text-white">
-                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Suppliers Management</span></a>
+                            <i class="fa fa-group"></i> <span class="ms-1 d-none d-sm-inline">Suppliers Management</span></a>
                     </li>
                     <li>
                         <a href="{{route('units.index')}}" class="nav-link px-0 align-middle text-white">
-                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Unit Management</span></a>
+                            <i class="fa fa-cube"></i> <span class="ms-1 d-none d-sm-inline">Unit Management</span></a>
                     </li>
                     <li>
                         <a href="{{route('purchase.index')}}" class="nav-link px-0 align-middle text-white">
-                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Purchase Management</span></a>
+                            <i class="fa fa-tasks"></i> <span class="ms-1 d-none d-sm-inline">Purchase Management</span></a>
                     </li>
                     <li>
                         <a href="{{route('sales.index')}}" class="nav-link px-0 align-middle text-white">
-                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Sale Management</span></a>
+                            <i class="fa fa-server"></i> <span class="ms-1 d-none d-sm-inline">Sale Management</span></a>
                     </li>
                     <li>
                         <a href="#expense" class="nav-link px-0 align-middle text-white" data-bs-toggle="collapse">
