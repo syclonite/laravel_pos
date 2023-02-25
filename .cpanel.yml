@@ -1,4 +1,4 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/ronok/public_html/
-    - /bin/cp * $DEPLOYPATH
+#    - /bin/cp * $DEPLOYPATH
