@@ -14,6 +14,7 @@ use \App\Http\Controllers\SaleOrderController;
 use \App\Http\Controllers\ExpenseController;
 use \App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Auth;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
