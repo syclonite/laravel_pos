@@ -37,10 +37,11 @@ class UnitController extends Controller
      */
     public function store(Request $request)
     {
+//        dd($request->all());
         $unit = new Unit([
             'unit_name' => $request->get('unit_name'),
             'unit_description' => $request->get('unit_des'),
-            'status' => $request->get('status')
+            'status' => '1'
         ]);
         $unit->save();
         return redirect()->route('units.index')->with('success','Unit has been created successfully.');

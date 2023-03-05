@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Stock;
+use App\Models\StockCount;
+use App\Models\Unit;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 
@@ -26,8 +29,9 @@ class ProductController extends Controller
      */
     public function create()
     {
+        $units = Unit::get();
         $subcategories = SubCategory::get();
-        return view('backend.products.create',compact('subcategories'));
+        return view('backend.products.create',compact('subcategories','units'));
     }
 
     /**
@@ -38,13 +42,32 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+//        dd($request->all());
         $product = new Product([
             'product_name' => $request->get('product_name'),
+            'quantity' => $request->get('quantity'),
+            'purchase_price' => $request->get('purchase_price'),
+            'selling_price' => $request->get('selling_price'),
             'product_description' => $request->get('product_des'),
-            'status' => $request->get('status'),
+            'status' => '1',
             'subcategory_id' => $request->get('subcategory_id'),
+            'unit_id' => $request->get('unit_id'),
         ]);
         $product->save();
+        $check_stock_counts = StockCount::where([['product_id',$product->id],['unit_id',$product->unit_id]])->get();
+        if ($check_stock_counts->isEmpty()){
+            ($product->subcategory_id);
+            StockCount::create([
+                'product_id'=> $product->id,
+                'unit_id' => $product->unit_id,
+                'subcategory_id' => $product->subcategory_id,
+                'user_id' => '4',
+                'total_quantity' => $product->quantity,
+                'status' => '1',
+                'currently_product_selling_price' => $product->selling_price,
+                'currently_product_purchase_price' => $product->purchase_price,
+            ]);
+        }
         return redirect()->route('products.index')->with('success','Product has been created successfully.');
     }
 
@@ -68,7 +91,8 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $subcategories = SubCategory::get();
-        return view('backend.products.edit',compact('product','subcategories'));
+        $units = Unit::get();
+        return view('backend.products.edit',compact('product','subcategories','units'));
     }
 
     /**
@@ -82,9 +106,21 @@ class ProductController extends Controller
     {
         $product->product_name = $request->get('product_name');
         $product->product_description = $request->get('product_des');
+        $product->quantity = $request->get('quantity');
+        $product->purchase_price = $request->get('purchase_price');
+        $product->selling_price = $request->get('selling_price');
         $product->status = $request->get('status');
         $product->subcategory_id = $request->get('subcategory_id');
+        $product->unit_id = $request->get('unit_id');
         $product->save();
+        StockCount::where([['product_id',$product->id]])->update([
+            'total_quantity' => $product->quantity,
+            'status' => '1',
+            'currently_product_selling_price' => $product->selling_price,
+            'currently_product_purchase_price' => $product->purchase_price,
+            'unit_id' => $product->unit_id,
+            'subcategory_id' => $product->subcategory_id,
+        ]);
         return redirect()->route('products.index')->with('success','Product has been updated successfully.');
     }
 
@@ -97,13 +133,14 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         $product->delete(); // Easy right?
-
+        StockCount::where('product_id',$product->id)->delete();
         return redirect()->route('products.index')->with('success','Product Deleted.');
     }
 
     public function restore($id)
     {
         Product::where('id', $id)->withTrashed()->restore();
+        StockCount::where('product_id', $id)->withTrashed()->restore();
 
         return redirect()->route('products.index')->with('Product restored successfully.');
     }
@@ -111,7 +148,19 @@ class ProductController extends Controller
     public function forceDelete($id)
     {
         Product::where('id', $id)->withTrashed()->forceDelete();
+        StockCount::where('id', $id)->withTrashed()->forceDelete();
 
         return redirect()->route('products.index')->with('Product force deleted successfully.');
     }
+
+    public function get_unit_ajax(Request $request){
+
+        if ($request == true){
+            $unit_data_ajax = Unit::get();
+            return json_encode(array('unit_data_ajax'=>$unit_data_ajax));
+        }
+
+    }
+
+
 }

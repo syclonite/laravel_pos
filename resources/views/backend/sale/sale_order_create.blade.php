@@ -425,7 +425,7 @@
                 // percentage_cal(data)
                 // submit_stock_order(data)
                 // return window.print();
-                submit_purchase(data)
+                submit_sales(data)
             }
 
         });
@@ -477,45 +477,16 @@
             });
         }
 
-        $("button#submit").click(function() {
-            var data = [];
-            var product_id,quantity, product_price,unit_id;
-            // return alert(payment_status);
-            $("#myTable > tbody >tr").each(function(index) {
-                product_id = parseInt($(this).find('.product_id').text());
-                quantity = parseInt($(this).find('.quantity').text());
-                product_price = parseFloat($(this).find('.product_price').text());
-                unit_id = parseInt($(this).find('.unit_id').text());
-                data.push({
-                    product_id,
-                    unit_id,
-                    quantity,
-                    product_price,
-                });
-            });
-            // return percentage_cal();
-            // return console.log(data);
-            if(data == ""){
-                alert("Please Add list then try again ")
-            }else{
-                // percentage_cal(data)
-                // submit_stock_order(data)
-               // return window.print();
-                submit_purchase(data)
-            }
-
-        });
-
         function showmsg(){
             alert("New Order Created")
             window.location.reload();
         }
 
-        function submit_purchase(data){
+        function submit_sales(data){
             // return console.log(data);
             // return console.log("percentage status_value:"+value)
             $.ajax({
-                url: "http://localhost:8000/sales",
+                url: "{{route('sales.store')}}",
                 type: "POST",
                 contentType: "application/x-www-form-urlencoded; charset=UTF-8",
                 dataType: "json",

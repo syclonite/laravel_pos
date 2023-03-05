@@ -12,6 +12,7 @@ use \App\Http\Controllers\SuppliersController;
 use \App\Http\Controllers\UnitController;
 use \App\Http\Controllers\PurchaseOrderController;
 use \App\Http\Controllers\SaleOrderController;
+use \App\Http\Controllers\VoucherController;
 use \App\Http\Controllers\ExpenseController;
 use \App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Auth;
@@ -39,6 +40,7 @@ Route::get('/', function () { return view('welcome');})->name('welcome');
 Route::resource('products',ProductController::class);
 Route::post('/products/restore/{id}', [ProductController::class, 'restore'])->name('products.restore');
 Route::delete('/products/force-delete/{id}', [ProductController::class, 'forceDelete'])->name('products.force_delete');
+Route::post('/products/get_all_units/', [ProductController::class, 'get_unit_ajax'])->name('products.get_unit_ajax');
 
 Route::resource('categories',CategoryController::class);
 Route::post('/categories/restore/{id}', [CategoryController::class, 'restore'])->name('categories.restore');
@@ -94,3 +96,13 @@ Route::post('/purchase/store',[PurchaseOrderController::class, 'store'])->name('
 Route::get('/purchase/edit/{id}',[PurchaseOrderController::class, 'edit'])->name('purchase.edit');
 Route::post('/purchase/update/{id}',[PurchaseOrderController::class, 'update'])->name('purchase.update');
 Route::delete('/purchase/delete/{id}',[PurchaseOrderController::class, 'destroy'])->name('purchase.destroy');
+
+Route::get('/voucher/create',[VoucherController::class, 'create_voucher'])->name('voucher.create_voucher');
+Route::post('/voucher/voucher_selected_customer',[VoucherController::class, 'voucher_selected_customer'])->name('voucher.voucher_selected_customer');
+Route::post('/voucher/add_customer',[VoucherController::class, 'add_customer_voucher'])->name('voucher.add_customer_voucher');
+Route::post('/voucher/all_customers_ajax',[VoucherController::class, 'all_voucher_customer_ajax'])->name('voucher.all_voucher_customer_ajax');
+Route::post('/voucher/all_product_price_ajax',[VoucherController::class, 'all_voucher_product_price_ajax'])->name('voucher.all_voucher_product_price_ajax');
+Route::post('/voucher/voucher_store',[VoucherController::class, 'voucher_store'])->name('voucher.voucher_store');
+Route::get('/voucher/voucher_index',[VoucherController::class, 'index'])->name('voucher.voucher_index');
+Route::get('/voucher/print_voucher/{id}',[VoucherController::class, 'print_voucher'])->name('voucher.print_voucher');
+Route::delete('/voucher/delete/{id}',[VoucherController::class, 'destroy'])->name('voucher.destroy');

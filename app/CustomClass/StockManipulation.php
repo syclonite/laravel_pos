@@ -3,6 +3,7 @@
 namespace App\CustomClass;
 
 use App\Models\SaleOrderDetail;
+use App\Models\Product;
 use App\Models\Stock;
 use App\Models\StockCount;
 use Illuminate\Support\Facades\Mail;
@@ -11,8 +12,7 @@ class StockManipulation
 {
    public function add_stock($request){
 //      dd(PurchaseOrderDetail::where('product_id',2)->sum('quantity'));
-        Stock::create($request);
-
+       Stock::create($request);
     }
 
    public function update_stock($request){
@@ -125,24 +125,35 @@ class StockManipulation
           $product_id = $purchase_stock['product_id'];
           $unit_id = $purchase_stock['unit_id'];
           $selling_price = $purchase_stock['selling_price'];
+          $purchase_price = $purchase_stock['purchase_price'];
           $total_quantity = Stock::where([['product_id',$product_id],['unit_id',$unit_id]])->sum('quantity');
           $data = StockCount::where([['product_id',$product_id],['unit_id',$unit_id]])->get();
+          $subcategory_id = Product::where([['id',$product_id],['unit_id',$unit_id]])->pluck('subcategory_id')->first();
+          $total_quantity_stock_count = StockCount::where([['product_id',$product_id],['unit_id',$unit_id]])->sum('total_quantity');
           if ($data->isEmpty()){
 //              dd("empty");
               StockCount::create([
                  'product_id'=> $product_id,
                  'unit_id' => $unit_id,
-                 'user_id' => '2',
+                 'user_id' => '4',
                  'total_quantity' => $total_quantity,
                  'status' => '1',
                  'currently_product_selling_price' => $selling_price,
+                 'currently_product_purchase_price' => $purchase_price,
+                 'subcategory_id' => $subcategory_id,
               ]);
 
           }elseif ($data->isNotEmpty()){
 //              dd("not Empty");
              StockCount::where([['product_id',$product_id],['unit_id',$unit_id]])->update([
-                 'total_quantity' => $total_quantity,
+                 'total_quantity' => $total_quantity + $total_quantity_stock_count,
                  'currently_product_selling_price' => $selling_price,
+                 'currently_product_purchase_price' => $purchase_price,
+             ]);
+             Product::where([['id',$product_id],['unit_id',$unit_id]])->update([
+                 'quantity' => $total_quantity + $total_quantity_stock_count,
+                 'selling_price' => $selling_price,
+                 'purchase_price' => $purchase_price,
              ]);
           }
        }

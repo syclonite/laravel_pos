@@ -38,15 +38,15 @@
                     <input class="form-control" type="text" name="unit_des" placeholder="Unit Description">
                 </div>
             </div>
-            <div class="col-xs-6 col-sm-6 col-md-6">
-                <div class="form-group">
-                    <strong>Status:</strong>
-                    <select name="status" id="" class="form-control" >
-                        <option value="0">Disabled</option>
-                        <option value="1">Enabled</option>
-                    </select>
-                </div>
-            </div>
+{{--            <div class="col-xs-6 col-sm-6 col-md-6">--}}
+{{--                <div class="form-group">--}}
+{{--                    <strong>Status:</strong>--}}
+{{--                    <select name="status" id="" class="form-control" >--}}
+{{--                        <option value="0">Disabled</option>--}}
+{{--                        <option value="1">Enabled</option>--}}
+{{--                    </select>--}}
+{{--                </div>--}}
+{{--            </div>--}}
             <div class="col-xs-12 col-sm-12 col-md-12 text-center">
                 <br>
                 <button type="submit" class="btn btn-primary btn-lg">Submit</button>

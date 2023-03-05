@@ -10,7 +10,7 @@ class Product extends Model
 {
     use HasFactory,SoftDeletes;
     protected $fillable = [
-        'product_name','product_description','status','subcategory_id',
+        'product_name','product_description','status','subcategory_id','unit_id','purchase_price','quantity','selling_price'
     ];
 
     public function subcategory()

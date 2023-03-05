@@ -50,7 +50,7 @@ class PurchaseOrderController extends Controller
 //        $test = $request['purchase_order']['billing_amount'];
         $purchase_order = new PurchaseOrder([
             'supplier_id' => $request['purchase_order']['supplier_id'],
-            'user_id' => '2',
+            'user_id' => '4',
             'billing_amount' => $request['purchase_order']['billing_amount'],
             'paid_amount' => $request['purchase_order']['paid_amount'],
             'extra_charge' => $request['purchase_order']['extra_charge'],
@@ -64,7 +64,7 @@ class PurchaseOrderController extends Controller
 //            dd($purchase_order_detail['quantity']);
             PurchaseOrderDetail::create([
                 'supplier_id' => $request['purchase_order']['supplier_id'],
-                'user_id' => '2',
+                'user_id' => '4',
                 'purchase_order_id' =>  $purchase_order->id,
                 'product_id' => $purchase_order_detail['product_id'],
                 'unit_id' => $purchase_order_detail['unit_id'],
@@ -82,6 +82,7 @@ class PurchaseOrderController extends Controller
                'product_id' => $purchase_order_detail['product_id'],
                'quantity' => $purchase_order_detail['quantity'],
                'purchase_amount' => $purchase_order_detail['purchase_price'],
+               'selling_amount' => $purchase_order_detail['selling_price'],
            ]);
         }
 
@@ -128,7 +129,7 @@ class PurchaseOrderController extends Controller
 //        dd($request->all());
         $purchase_order = PurchaseOrder::find($id);
         $purchase_order->supplier_id = $request['purchase_order']['supplier_id'];
-        $purchase_order->user_id = '2';
+        $purchase_order->user_id = '4';
         $purchase_order->billing_amount = $request['purchase_order']['billing_amount'];
         $purchase_order->paid_amount = $request['purchase_order']['paid_amount'];
         $purchase_order->extra_charge = $request['purchase_order']['extra_charge'];
@@ -143,7 +144,7 @@ class PurchaseOrderController extends Controller
 //            dd($purchase_order_detail['quantity']);
             PurchaseOrderDetail::create([
                 'supplier_id' => $request['purchase_order']['supplier_id'],
-                'user_id' => '2',
+                'user_id' => '4',
                 'purchase_order_id' => $purchase_order->id,
                 'product_id' => $purchase_order_detail['product_id'],
                 'unit_id' => $purchase_order_detail['unit_id'],
@@ -161,6 +162,7 @@ class PurchaseOrderController extends Controller
                 'product_id' => $purchase_order_detail['product_id'],
                 'quantity' => $purchase_order_detail['quantity'],
                 'purchase_amount' => $purchase_order_detail['purchase_price'],
+                'selling_amount' => $purchase_order_detail['selling_price'],
             ]);
         }
         $stocks->add_update_total_stock($request);

@@ -259,7 +259,7 @@
             // return console.log(data);
             // return console.log("percentage status_value:"+value)
             $.ajax({
-                url: "http://localhost:8000/purchase/store",
+                url: "{{route('purchase.store')}}",
                 type: "POST",
                 contentType: "application/x-www-form-urlencoded; charset=UTF-8",
                 dataType: "json",

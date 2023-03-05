@@ -36,7 +36,7 @@
     <div class="row flex-nowrap">
         <div class=" col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-light shadow-lg bg-dark"> <!-- Sidebar -->
             <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
-                <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                <a href="{{route('dashboard')}}" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
                     <i class="fa fa-dashboard"></i><span class="fs-5 ms-1 d-none d-sm-inline">Dashboard</span>
                 </a>
                 <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
@@ -132,6 +132,21 @@
 </body>
 
 </html>
+
+<style>
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+</style>
+
 <script>
     var minDate, maxDate;
     // Custom filtering function which will search data in column four between two values

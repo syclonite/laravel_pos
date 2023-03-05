@@ -51,7 +51,7 @@ class SaleOrderController extends Controller
 //        dd($request->all());
         $sale_order = new SaleOrder([
             'customer_id' => $request['sale_order']['customer_id'],
-            'user_id' => '2',
+            'user_id' => '4',
             'billing_amount' => $request['sale_order']['billing_amount'],
             'paid_amount' => $request['sale_order']['paid_amount'],
             'extra_charge' => $request['sale_order']['extra_charge'],
@@ -64,7 +64,7 @@ class SaleOrderController extends Controller
 //            dd($sale_order_detail);
             SaleOrderDetail::create([
                 'customer_id' => $request['sale_order']['customer_id'],
-                'user_id' => '2',
+                'user_id' => '4',
                 'sale_order_id' => $sale_order->id,
                 'product_id' => $sale_order_detail['product_id'],
                 'unit_id' => $sale_order_detail['unit_id'],
@@ -122,7 +122,7 @@ class SaleOrderController extends Controller
         $sale_order = SaleOrder::find($id);
         $sale_order_id = SaleOrder::where('id',$id)->pluck('id');
         $sale_order->customer_id = $request['sale_order']['customer_id'];
-        $sale_order->user_id = '2';
+        $sale_order->user_id = '4';
         $sale_order->billing_amount = $request['sale_order']['billing_amount'];
         $sale_order->paid_amount = $request['sale_order']['paid_amount'];
         $sale_order->extra_charge = $request['sale_order']['extra_charge'];
@@ -138,7 +138,7 @@ class SaleOrderController extends Controller
 //            dd($purchase_order_detail['quantity']);
             SaleOrderDetail::create([
                 'customer_id' => $request['sale_order']['customer_id'],
-                'user_id' => '2',
+                'user_id' => '4',
                 'sale_order_id' => $sale_order->id,
                 'product_id' => $sale_order_detail['product_id'],
                 'unit_id' => $sale_order_detail['unit_id'],

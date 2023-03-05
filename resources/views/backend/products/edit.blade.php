@@ -33,18 +33,7 @@
                     <input type="text" name="product_name" class="form-control" placeholder="Product Name" value="{{$product->product_name}}" >
                 </div>
             </div>
-            <div class="col-xs-6 col-sm-6 col-md-6">
-                <div class="form-group">
-                    <strong>Product Description:</strong>
-                    <input class="form-control" type="text" name="product_des" placeholder="Product Description" value="{{$product->product_description}}">
-                </div>
-            </div>
-            <div class="col-xs-6 col-sm-6 col-md-6">
-                <div class="form-group">
-                    <strong>Product Description:</strong>
-                    <input class="form-control" type="text" name="product_des" placeholder="Product Description" value="{{$product->product_description}}">
-                </div>
-            </div>
+
             <div class="col-xs-6 col-sm-6 col-md-6">
                 <div class="form-group">
                     <strong>SubCategory Name:</strong>
@@ -56,6 +45,42 @@
                     </select>
                 </div>
             </div>
+            <div class="col-xs-6 col-sm-6 col-md-6">
+                <div class="form-group">
+                    <strong>Unit Name:</strong>
+                    <select name="unit_id" id="" class="form-control" >
+                        <option value=''>Please choose one...</option>
+                        @foreach($units as $unit)
+                            <option value="{{ $unit->id }}"{{ $product->unit_id == $unit->id ? 'selected' : '' }}>{{ $unit->unit_name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6">
+                <div class="form-group">
+                    <strong>Quantity:</strong>
+                    <input type="number" name="quantity" class="form-control" placeholder="Quantity" value="{{$product->quantity}}" >
+                </div>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6">
+                <div class="form-group">
+                    <strong>Purchase Price:</strong>
+                    <input type="number" name="purchase_price" class="form-control" placeholder="Purchase Price" value="{{$product->purchase_price}}" >
+                </div>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6">
+                <div class="form-group">
+                    <strong>Selling Price:</strong>
+                    <input type="number" name="selling_price" class="form-control" placeholder="Selling Price" value="{{$product->selling_price}}" >
+                </div>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6">
+                <div class="form-group">
+                    <strong>Product Description:</strong>
+                    <input class="form-control" type="text" name="product_des" placeholder="Product Description" value="{{$product->product_description}}">
+                </div>
+            </div>
+
             <div class="col-xs-6 col-sm-6 col-md-6">
                 <div class="form-group">
                     <strong>Status:</strong>

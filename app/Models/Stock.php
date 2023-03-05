@@ -9,7 +9,7 @@ class Stock extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'purchase_order_id','supplier_id','product_id','unit_id','quantity','purchase_amount',
+        'purchase_order_id','supplier_id','product_id','unit_id','quantity','purchase_amount','selling_amount'
     ];
 
 }

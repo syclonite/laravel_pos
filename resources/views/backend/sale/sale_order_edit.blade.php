@@ -149,7 +149,7 @@
             }else{
                 // percentage_cal(data)
                 // submit_stock_order(data)
-                submit_purchase(data)
+                submit_sales(data)
             }
 
         });
@@ -178,7 +178,7 @@
         }
 
 
-        function submit_purchase(data){
+        function submit_sales(data){
             // return console.log(data);
             // return console.log("percentage status_value:"+value)
             $.ajax({
