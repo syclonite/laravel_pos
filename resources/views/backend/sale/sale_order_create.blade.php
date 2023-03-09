@@ -9,7 +9,6 @@
             </div>
             <div class="pull-right">
                 <a class="btn btn-primary" href="{{route('sales.index')}}"> Back</a>
-                <a class="btn btn-primary" href="#" onclick="generatePDF()"> PDF</a>
                 <!-- Modal for Due Payment-->
                 <div class="modal fade " id="customer_modal" tabindex="-1" aria-labelledby="CustomerModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
@@ -102,27 +101,21 @@
     {{--        @csrf--}}
 
     <div class="row">
-        <div class="col-xs-6 col-sm-6 col-md-6">
+        <div class="col-xs-4 col-sm-4 col-md-4">
             <div class="form-group">
                 <strong>Products</strong>
                 <select name="product_id" id="product_id" class="form-control" >
                     <option value=''>Please choose one...</option>
                     @foreach($products as $product)
-                        <option value="{{ $product->id }}">{{ $product->product_name}}</option>
+                        <option value="{{ $product->id }}">{{ $product->product_name }}</option>
                     @endforeach
                 </select>
             </div>
         </div>
-        <div class="col-xs-6 col-sm-6 col-md-6">
-            <div class="form-group">
-                <strong>Price</strong>
-                <input type="text" name="product_price" class="form-control" placeholder="Product Price" id="product_price">
-            </div>
-        </div>
-        <div class="col-xs-6 col-sm-6 col-md-6">
+        <div class="col-xs-4 col-sm-4 col-md-4">
             <div class="form-group">
                 <strong>Units:</strong>
-                <select name="unit_id" id="unit_id" class="form-control" >
+                <select name="unit_id" id="unit_id" class="form-control" onchange="get_available_stock_price()">
                     <option value=''>Please choose one...</option>
                     @foreach($units as $unit)
                         <option value="{{ $unit->id }}">{{ $unit->unit_name}}</option>
@@ -130,14 +123,21 @@
                 </select>
             </div>
         </div>
-        <div class="col-xs-6 col-sm-6 col-md-6">
+        <div class="col-xs-4 col-sm-4 col-md-4">
             <div class="form-group">
-                <strong>Quantity</strong>
+                <strong>Price</strong>
+                <input type="text" name="product_price" class="form-control" placeholder="Product Price" id="product_price" disabled>
+            </div>
+        </div>
+        <div class="col-xs-4 col-sm-4 col-md-4">
+            <div class="form-group">
+              <strong>Quantity</strong>
                 <input type="text" name="quantity" class="form-control" placeholder="Quantity" id="quantity">
+                  <p>Available Stock: <span id="available_stock"></span></p>
             </div>
         </div>
 
-        <div class="col-xs-6 col-sm-6 col-md-6">
+        <div class="col-xs-4 col-sm-4 col-md-4">
             <div class="form-group">
                 <strong>Customers:</strong>
                 <select name="customer_id" id="customer_id" class="form-control" >
@@ -148,7 +148,7 @@
                 </select>
             </div>
         </div>
-        <div class="col-xs-6 col-sm-6 col-md-6">
+        <div class="col-xs-4 col-sm-4 col-md-4">
             <div class="form-group">
                 <strong>Status:</strong>
                 <select name="status" id="status_id" class="form-control" onchange="check_payment_status(this)">
@@ -161,25 +161,32 @@
 
         <div class="container">
             <br>
-            <table id="myTable" class="table table-striped table-light table-bordered">
+            <table id="myTable" class="table table-bordered">
                 <thead>
                 <tr>
-                    <th>Serial No</th>
-                    <th>Customer</th>
+                    {{--                            <th>Serial No</th>--}}
                     <th>Product Name</th>
-                    <th>Price</th>
                     <th>Unit</th>
+                    <th>Price</th>
                     <th>Quantity</th>
                     <th>Subtotal</th>
                     <th>Action</th>
                 </tr>
                 </thead>
 
-                <tbody id="data">
-
+                <tbody>
+                <tr>
+                    {{--                            <td></td>--}}
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
                 </tbody>
-
             </table>
+
             <br>
             <div>
                 <div class="row">
@@ -189,9 +196,9 @@
                                 <ul class="list-group">
                                     <li class="list-group-item">Discount :<input class="form-control" type="number" id="discount" name="discount" onchange="bill_calculation()"></li>
                                     <li class="list-group-item">Extra Charge :<input class="form-control" type="number" id="extra_charge" name="extra_charge" onchange="bill_calculation()"></li>
-                                    <li class="list-group-item">Total Bill: <span  id="total_bill"></span></li>
+                                    <li class="list-group-item">Total Bill: <input class="form-control" type="number" id="total_bill" name="total_bill" disabled></li>
                                     <li class="list-group-item">Paid Amount :<input class="form-control" type="number" id="paid_amount" onchange="bill_calculation()"></li>
-                                    <li class="list-group-item">Return Amount :<span id="change_amount"></span></li>
+                                    <li class="list-group-item">Return Amount : <span id="change_amount" ></span>  </li>
                                 </ul>
                             </div>
                         </div>
@@ -203,116 +210,35 @@
                 </div>
             </div>
         </div>
-
         <br>
     </div>
-    {{--    </form>--}}
-    <script src="https://unpkg.com/jspdf-invoice-template@1.4.0/dist/index.js"></script>
+
     <script>
 
-        function generatePDF() {
-            var myTableArray = [];
-            $("#myTable tbody tr").each(function() {
-                var arrayOfThisRow = [];
-                var removal_from_index = [0,1,3,6,10];
-                var tableData = $(this).find('td');
-                if (tableData.length > 0) {
-                    tableData.each(function() { arrayOfThisRow.push($(this).text());});
-                    for (var i = removal_from_index.length -1; i >= 0; i--)
-                        arrayOfThisRow.splice(removal_from_index[i],1);
-                    myTableArray.push(arrayOfThisRow);
-                }
-            });
-            console.log(myTableArray);
-            var props = {
-                outputType: jsPDFInvoiceTemplate.OutputType.Save,
-                returnJsPDFDocObject: true,
-                fileName: "Invoice#{{$sale_order_bill_no + 1}}",
-                orientationLandscape: false,
-                printable: true,
-                compress: true,
-                logo: {
-                    src: "https://raw.githubusercontent.com/edisonneza/jspdf-invoice-template/demo/images/logo.png",
-                    type: 'PNG', //optional, when src= data:uri (nodejs case)
-                    width: 53.33, //aspect ratio = width/height
-                    height: 26.66,
-                    margin: {
-                        top: 0, //negative or positive num, from the current position
-                        left: 0 //negative or positive num, from the current position
-                    }
-                },
-                stamp: {
-                    inAllPages: true, //by default = false, just in the last page
-                    src: "https://raw.githubusercontent.com/edisonneza/jspdf-invoice-template/demo/images/qr_code.jpg",
-                    type: 'JPG', //optional, when src= data:uri (nodejs case)
-                    width: 20, //aspect ratio = width/height
-                    height: 20,
-                    margin: {
-                        top: 0, //negative or positive num, from the current position
-                        left: 0 //negative or positive num, from the current position
-                    }
-                },
-                business: {
-                    name: "Nawshad Enterprise",
-                    address: "Albania, Tirane ish-Dogana, Durres 2001",
-                    phone: "(+355) 069 11 11 111",
-                    email: "email@example.com",
-                    email_1: "info@example.al",
-                    website: "www.example.al",
-                },
-                contact: {
-                    label: "Invoice issued for:",
-                    name: "Client Name",
-                    address: "Albania, Tirane, Astir",
-                    phone: "(+355) 069 22 22 222",
-                    email: "client@website.al",
-                    otherInfo: $("#total_bill").text(),
-                },
-                invoice: {
-                    label: "Invoice #:",
-                    num:  {{$sale_order_bill_no + 1 }},
-                    // invDate: "Payment Date: 01/01/2021 18:12",
-                    // invGenDate: "Invoice Date: 02/02/2021 10:17",
-                    headerBorder: true,
-                    tableBodyBorder: false,
-                    header: [
-                        {
-                            title: "#",
-                            style: {
-                                width: 5
-                            }
-                        },
-                        { title: "Customer"},
-                        { title: "Product"},
-                        { title: "Price"},
-                        { title: "Unit"},
-                        { title: "Quantity"},
-                        { title: "Subtotal"},
-                    ],
+       function get_available_stock_price(){
+           // var product_id = id.value;
+            // alert(value);
 
-                    table: Array.from(myTableArray, (item, index)=>([
-                        index + 1,
-                        item[0],
-                        item[1],
-                        item[2],
-                        item[3],
-                        item[4],
-                        item[5],
-                    ])),
-                    invDescLabel: "Invoice Note",
-                    invDesc: "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary.",
-                },
-                footer: {
-                    text: "The invoice is created on a computer and is valid without the signature and stamp.",
-                },
-                pageEnable: true,
-                pageLabel: "Page ",
-            };
+           $.ajax({
+               url: "{{route('sales.available_stock_price_ajax')}}",
+               type: "POST",
+               data:{
+                   _token:'{{ csrf_token() }}',
+                   product_id: $('#product_id option:selected').val(),
+                   unit_id: $('#unit_id option:selected').val(),
+               },
+               cache: false,
+               dataType: 'json',
+               success: function(dataResult){
+                   console.log(dataResult);
+                   var available_stock = dataResult.available_stock_ajax;
+                   var selling_price = dataResult.product_price;
+                   $('#available_stock').html(available_stock);
+                   $('#product_price').val(selling_price);
+               }
+           });
 
-            var pdfObject = jsPDFInvoiceTemplate.default(props);
-            console.log(pdfObject);
-
-        }
+       }
 
         function add_new_customer(){
             $.ajax({
@@ -336,59 +262,67 @@
             all_ajax_customers()
         }
 
-        $("button#add_list").click(function() {
-            // alert('hello');
-            var product_id = $("#product_id").val();
-            var product_text = $("#product_id option:selected").text();
-            var product_price = $("#product_price").val();
-            var quantity = $("#quantity").val();
-            var unit_id = $("#unit_id").val();
-            var unit_text = $("#unit_id option:selected").text();
-            var customer_id = $("#customer_id").val();
-            var customer_text = $("#customer_id option:selected").text();
-            var subtotal = $("#product_price").val() * $("#quantity").val();
-            // return console.log(expiry_date);
+       // add list to the table
+       var item = 0;
 
-            var new_row = '<tr><td>' + ($('table tbody tr').length + 1) + '</td>'+
-                '<td class="customer_id" style="display: none">' + customer_id + '</td>' +
-                '<td class="customer_text">' + customer_text + '</td>' +
-                '<td class="product_id" style="display: none">' + product_id + '</td>' +
-                '<td class="product_text">' + product_text + '</td>' +
-                '<td class="product_price">' + product_price + '</td>'+
-                '<td class="unit_id" style="display: none">' + unit_id + '</td>' +
-                '<td class="unit_text">' + unit_text + '</td>' +
-                '<td class="quantity">' + quantity + '</td>' +
-                '<td class="subtotal">' + subtotal + '</td>' +
-                '<td><input type="button" value="Delete" onclick="bill_calculation(this)"/></td></tr>';
-            $("table tbody").append(new_row);
-            bill_calculation();
-        });
-        function bill_calculation(value){
-            $(value).parent().parent().remove()
-            var sum_subtotal_amount = 0
-            $(".subtotal").each(function(){
-                sum_subtotal_amount += parseFloat($(this).text());
-                $("#total_bill").text(sum_subtotal_amount)
-            })
-            var discount = $('#discount').val();
-            // var extra_charge = $('#extra_charge').val();
-            var total_bill = sum_subtotal_amount;
-            if( discount != '' || extra_charge != ''){
-                var result_1 = (total_bill - discount);
-                var result_2 =  parseInt(result_1) + Number($('#extra_charge').val());
-                // console.log(result_2);
-                $("#total_bill").text(result_2);
-            }
-            var paid_amount = $("#paid_amount").val();
-            if (result_2 >= paid_amount){
-                var change_amount = result_2 - paid_amount;
-                $("#change_amount").text(change_amount);
-                //     // alert("if condition");
-            }else{
-                change_amount = paid_amount - result_2;
-                $("#change_amount").text(change_amount);
-            }
-        }
+       $("button#add_list").click(function() {
+           // alert('hello');
+           item++;
+           var product_id = $("#product_id").val();
+           var product_text = $("#product_id option:selected").text();
+           var product_price = $("#product_price").val();
+           var quantity = $("#quantity").val();
+           var unit_id = $("#unit_id").val();
+           var unit_text = $("#unit_id option:selected").text();
+           var subtotal = product_price * quantity;
+           // return console.log(expiry_date);
+           var new_row = '<tr>' +
+               // '<td>' + ($('#myTable > tr').length + 1) + '</td>'+
+               '<td class="product_id" style="display: none">' + product_id + '</td>' +
+               '<td class="unit_id" style="display: none">' + unit_id + '</td>' +
+               '<td class="product_text">' + product_text + '</td>' +
+               '<td class="unit_text">' + unit_text + '</td>' +
+               '<td class="product_price">' + product_price + '</td>'+
+               '<td class="quantity">' + quantity + '</td>' +
+               '<td class="subtotal">' + subtotal + '</td>' +
+               '<td><input type="button" value="Delete" onclick="remove_cell(this)"/></td></tr>';
+           var btn = document.createElement('tr');
+           btn.innerHTML = new_row;
+           document.getElementById('myTable').appendChild(btn);
+           bill_calculation();
+       });
+
+       function remove_cell(value){
+           $(value).parent().parent().remove()
+           bill_calculation();
+       }
+
+       function bill_calculation(){
+           var total =0;
+           $('.subtotal').each(function(index, tr) {
+               // debugger
+               total =total+  parseInt($(this).text());
+           });
+           $('#total_bill').val(total);
+           var discount = $('#discount').val();
+           // var extra_charge = $('#extra_charge').val();
+           var total_bill = total;
+           if( discount != '' || extra_charge != ''){
+               var result_1 = (total_bill - discount);
+               var result_2 =  parseInt(result_1) + Number($('#extra_charge').val());
+               // console.log(result_2);
+               $("#total_bill").val(result_2);
+           }
+           var paid_amount = $("#paid_amount").val();
+           if (result_2 >= paid_amount){
+               var change_amount = result_2 - paid_amount;
+               $("#change_amount").text("Due -"+ change_amount);
+               //     // alert("if condition");
+           }else{
+               change_amount = paid_amount - result_2;
+               $("#change_amount").text(change_amount);
+           }
+       }
 
         function check_payment_status(selectObject){
             var value = selectObject.value;
@@ -401,13 +335,13 @@
 
         $("button#submit_due").click(function() {
             var data = [];
-            var product_id,quantity, product_price,unit_id,customer_id,status_id;
+            var product_id,quantity, product_price,unit_id,customer_id
             // return alert(payment_status);
-            $("#myTable > tbody >tr").each(function(index) {
-                product_id = parseInt($(this).find('.product_id').text());
-                quantity = parseInt($(this).find('.quantity').text());
-                product_price = parseFloat($(this).find('.product_price').text());
-                unit_id = parseInt($(this).find('.unit_id').text());
+            $("#myTable >tr").each(function(index) {
+                product_id = $(this).find('.product_id').text();
+                quantity = $(this).find('.quantity').text();
+                product_price = $(this).find('.product_price').text();
+                unit_id = $(this).find('.unit_id').text();
                 customer_id = $("#due_customer_id").val();
                 data.push({
                     product_id,
@@ -429,6 +363,36 @@
             }
 
         });
+
+       $("button#submit").click(function() {
+           var data = [];
+           var product_id,quantity, product_price,unit_id
+           // return alert(payment_status);
+           $("#myTable >tr").each(function(index) {
+               product_id = $(this).find('.product_id').text();
+               unit_id = $(this).find('.unit_id').text();
+               quantity = $(this).find('.quantity').text();
+               product_price = $(this).find('.product_price').text();
+               data.push({
+                   product_id,
+                   unit_id,
+                   quantity,
+                   product_price,
+               });
+           });
+           // return percentage_cal();
+           // return console.log(data);
+           if(data == ""){
+               alert("Please Add list then try again ")
+           }else{
+               // percentage_cal(data)
+               // submit_stock_order(data)
+               // return window.print();
+               submit_sales(data)
+           }
+
+       });
+
         function get_customers(customer_due_id){
             var customer_id = customer_due_id.value;
             $.ajax({
@@ -479,7 +443,7 @@
 
         function showmsg(){
             alert("New Order Created")
-            window.location.reload();
+            // window.location.reload();
         }
 
         function submit_sales(data){
@@ -497,14 +461,14 @@
                     sale_order: {
                         customer_id: $("#customer_id").val(),
                         paid_amount: $("#paid_amount").val(),
-                        billing_amount: parseFloat($("#total_bill").text()),
+                        billing_amount: $("#total_bill").val(),
                         extra_charge: $("#extra_charge").val(),
                         discount: $("#discount").val(),
                         status: $("#status_id").val(),
                     },
                     success: function (data) {
                         console.log(data)
-                        // showmsg()
+                        showmsg()
                     }
                 }
             })

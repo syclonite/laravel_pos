@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\CustomClass\StockManipulation;
 use App\Models\Product;
+use App\Models\PurchaseOrder;
+use App\Models\PurchaseOrderDetail;
 use App\Models\Stock;
 use App\Models\StockCount;
+use App\Models\Suppliers;
 use App\Models\Unit;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
@@ -43,6 +47,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
 //        dd($request->all());
+        $supplier = Suppliers::where('phone_1','01716994848')->value('id');
         $product = new Product([
             'product_name' => $request->get('product_name'),
             'quantity' => $request->get('quantity'),
@@ -67,6 +72,39 @@ class ProductController extends Controller
                 'currently_product_selling_price' => $product->selling_price,
                 'currently_product_purchase_price' => $product->purchase_price,
             ]);
+//            $purchase_order = new PurchaseOrder([
+//                'supplier_id' => $supplier,
+//                'user_id' => '4',
+//                'billing_amount' => '0',
+//                'paid_amount' => '0',
+//                'extra_charge' => '0',
+//                'discount' => '0',
+//                'status' => '1',
+//            ]);
+//            $purchase_order->save();
+//                PurchaseOrderDetail::create([
+//                    'supplier_id' => $supplier,
+//                    'user_id' => '4',
+//                    'purchase_order_id' => $purchase_order->id,
+//                    'product_id' => $product->id,
+//                    'unit_id' =>  $product->unit_id,
+//                    'quantity' => $product->quantity,
+//                    'purchase_amount' => $product->purchase_price,
+//                    'selling_amount' => $product->selling_price,
+//                    'status' => '1',
+//                    'discount' => '0',
+//                    'extra_charge' => '0'
+//                ]);
+//            Stock::create([
+//                'product_id'=> $product->id,
+//                'unit_id' => $product->unit_id,
+//                'subcategory_id' => $product->subcategory_id,
+//                'user_id' => '4',
+//                'total_quantity' => $product->quantity,
+//                'status' => '1',
+//                'selling_amount' => $product->selling_price,
+//                'purchase_amount' => $product->purchase_price,
+//            ]);
         }
         return redirect()->route('products.index')->with('success','Product has been created successfully.');
     }

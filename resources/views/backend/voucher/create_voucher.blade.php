@@ -77,13 +77,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-6">
+                        <div class="col-8">
                             <div class="col-12 d-inline-flex"><strong>Customer Name:</strong> <p id="voucher_customer_name"></p></div>
                             <div class="col-12 d-inline-flex"><strong>Mobile:</strong><p id="voucher_customer_phone"></p></div>
                             <div class="col-12 d-inline-flex"><strong>Address:</strong><p id="voucher_customer_address"></p></div>
-                        </div>
-                        <div class="col-2">
-                            <strong>Date: 1/3/2023</strong>
                         </div>
                     </div>
                 </div>
