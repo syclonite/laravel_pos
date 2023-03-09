@@ -34,9 +34,9 @@
                 <th>No </th>
                 <th>Bill No</th>
                 <th>Customer</th>
-                <th>Billing Amount</th>
-                <th>Paid Amount</th>
-                <th>Bill By</th>
+                <th>Billing</th>
+                <th>Paid</th>
+                <th>Billed By</th>
                 <th>Status</th>
                 <th id="created_at">Date</th>
 
@@ -55,9 +55,10 @@
                     <td>{{$sale_order->user_id}}</td>
                     <td>{{$sale_order->status}}</td>
                     <td>{{$sale_order->created_at->format('F d Y')}}</td>
-                    <td class="text-center">
+                    <td class="text-center d-flex d-inline-flex">
                         <form action="{{route('sales.destroy',$sale_order->id)}}" method="POST">
                             <a class="btn btn-primary" href="{{route('sales.edit',$sale_order->id)}}">Edit</a>
+                            <a class="btn btn-warning" href="{{route('sales.print_sale_invoice',$sale_order->id)}}">Print</a>
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger">Delete</button>

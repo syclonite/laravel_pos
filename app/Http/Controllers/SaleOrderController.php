@@ -339,6 +339,20 @@ class SaleOrderController extends Controller
         }
     }
 
+    public function print_sale_invoice($id){
+
+        $sale_order = SaleOrder::find($id);
+        $customers = Customer::find($sale_order->customer_id);
+        $sale_order_details = SaleOrderDetail::where('sale_order_id',$sale_order->id)->get();
+//        $product_price = SaleOrderDetail::where('sale_order_id',$sale_order->id)->value('product_price');
+//        $quantity = SaleOrderDetail::where('sale_order_id',$sale_order->id)->value('quantity');
+//        $result = $product_price * $quantity;
+//        dd($voucher_details);
+        return view('backend.sale.print_sale_invoice',compact('sale_order','customers','sale_order_details'));
+
+    }
+
+
 
 
 }
