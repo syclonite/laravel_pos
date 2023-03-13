@@ -20,7 +20,7 @@ class StockManipulation
         Stock::create($request);
     }
 
-    public function update_purchase_order_total_quantity($purchase_order_details,$purchase_order_id){
+   public function update_purchase_order_total_quantity($purchase_order_details,$purchase_order_id){
        foreach($purchase_order_details as $purchase_order_detail){
 //           dd($purchase_order_detail['product_id']);
            $current_quantity = PurchaseOrderDetail::where([['purchase_order_id',$purchase_order_id],['product_id', $purchase_order_detail['product_id']], ['unit_id', $purchase_order_detail['unit_id']]])->value('quantity');
@@ -149,19 +149,18 @@ class StockManipulation
                 });
 
             }
-            $total_quantity = Stock::where([['product_id',$sale_order_detail['product_id']],['unit_id',$sale_order_detail['unit_id']]])->sum('quantity');
-            //           $data = StockCount::where([['product_id',$product_id],['unit_id',$unit_id]])->get();
-            StockCount::where([['product_id',$sale_order_detail['product_id']],['unit_id',$sale_order_detail['unit_id']]])->update([
-                'total_quantity' => $total_quantity,
-            ]);
-            Product::where([['id',$sale_order_detail['product_id']],['unit_id',$sale_order_detail['unit_id']]])->update([
-                'quantity' => $total_quantity,
-            ]);
+//            $total_quantity = Stock::where([['product_id',$sale_order_detail['product_id']],['unit_id',$sale_order_detail['unit_id']]])->sum('quantity');
+//            //           $data = StockCount::where([['product_id',$product_id],['unit_id',$unit_id]])->get();
+//            StockCount::where([['product_id',$sale_order_detail['product_id']],['unit_id',$sale_order_detail['unit_id']]])->update([
+//                'total_quantity' => $total_quantity,
+//            ]);
+//            Product::where([['id',$sale_order_detail['product_id']],['unit_id',$sale_order_detail['unit_id']]])->update([
+//                'quantity' => $total_quantity,
+//            ]);
 
         }
 
     }
-
 
    public function add_update_total_stock($request){
        $purchase_stocks = $request['purchase_order_details'];
@@ -205,26 +204,7 @@ class StockManipulation
 
    }
 
-   public function reduce_total_stock($request){
-       $sale_stocks = $request['sale_order_details'];
-       foreach ($sale_stocks as $sale_stock){
-           $product_id = $sale_stock['product_id'];
-           $unit_id = $sale_stock['unit_id'];
-           $total_quantity = Stock::where([['product_id',$product_id],['unit_id',$unit_id]])->sum('quantity');
-           $stock_count_quantity = StockCount::where([['product_id',$product_id],['unit_id',$unit_id]])->sum('total_quantity');
-           $final_stock_result =  $stock_count_quantity - $total_quantity;
-//
-//           dd($total_quantity);
-//           $data = StockCount::where([['product_id',$product_id],['unit_id',$unit_id]])->get();
-           StockCount::where([['product_id',$product_id],['unit_id',$unit_id]])->update([
-               'total_quantity' => $final_stock_result,
-           ]);
-
-           Product::where([['id',$product_id],['unit_id',$unit_id]])->update([
-               'quantity' => $final_stock_result,
-           ]);
-
-       }
+   public function mail_current_stock(){
        $low_stock_count = StockCount::where('total_quantity','<=', 10)->join('products', 'products.id', '=', 'stock_counts.product_id')
            ->join('units', 'units.id', '=', 'stock_counts.unit_id')
            ->get(['products.product_name', 'units.unit_name', 'stock_counts.total_quantity']);
@@ -237,23 +217,41 @@ class StockManipulation
         }
    }
 
-   public function adjust_total_stock($data){
-       foreach ($data as $value){
-           $product_id = $value['product_id'];
-           $unit_id = $value['unit_id'];
-//           dd($product_id);
-           $total_quantity = Stock::where([['product_id',$product_id],['unit_id',$unit_id]])->sum('quantity');
-           $stock_count_quantity = StockCount::where([['product_id',$product_id],['unit_id',$unit_id]])->pluck('total_quantity');
-           $final_stock_result = $stock_count_quantity - $total_quantity;
-           StockCount::where([['product_id',$product_id],['unit_id',$unit_id]])->update([
-               'total_quantity' => $final_stock_result,
-           ]);
-           Product::where([['id',$product_id],['unit_id',$unit_id]])->update([
-               'quantity' => $final_stock_result,
-           ]);
-
+   public function update_sale_order_total_quantity($sale_order_details,$sale_order_id){
+//      return dd($sale_order_details,$sale_order_id);
+       foreach($sale_order_details as $sale_order_detail){
+           $current_quantity = SaleOrderDetail::where([['sale_order_id',$sale_order_id],['product_id',$sale_order_detail['product_id']],['unit_id',$sale_order_detail['unit_id']]])->value('quantity');
+           $current_total_quantity = StockCount::where([['product_id',$sale_order_detail['product_id']],['unit_id',$sale_order_detail['unit_id']]])->value('total_quantity');
+           $request_quantity = $sale_order_detail['quantity'];
+           if ($current_quantity > $request_quantity){
+               $result = $current_quantity - $request_quantity;
+               $calculate_total = $current_total_quantity + $result;
+//            return dd("result-".$result,"calculate_total-".$calculate_total);
+               StockCount::where([['product_id', $sale_order_detail['product_id']], ['unit_id', $sale_order_detail['unit_id']]])->update([
+                   'total_quantity'=>$calculate_total
+               ]);
+               Product::where([['id', $sale_order_detail['product_id']], ['unit_id', $sale_order_detail['unit_id']]])->update([
+                   'quantity'=>$calculate_total
+               ]);
+           }elseif ($current_quantity < $request_quantity){
+               $result = $request_quantity - $current_quantity;
+               $calculate_total = $current_total_quantity - $result;
+//            return dd("result-".$result,"calculate_total-".$calculate_total);
+               StockCount::where([['product_id', $sale_order_detail['product_id']], ['unit_id', $sale_order_detail['unit_id']]])->update([
+                   'total_quantity'=>$calculate_total
+               ]);
+               Product::where([['id', $sale_order_detail['product_id']], ['unit_id', $sale_order_detail['unit_id']]])->update([
+                   'quantity'=>$calculate_total
+               ]);
+           }elseif ($current_quantity == $request_quantity){
+               StockCount::where([['product_id', $sale_order_detail['product_id']], ['unit_id', $sale_order_detail['unit_id']]])->update([
+                   'total_quantity'=>$current_total_quantity
+               ]);
+               Product::where([['id', $sale_order_detail['product_id']], ['unit_id', $sale_order_detail['unit_id']]])->update([
+                   'quantity'=>$current_total_quantity
+               ]);
+           }
        }
    }
-
 
 }

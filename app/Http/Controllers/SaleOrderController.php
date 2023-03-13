@@ -91,7 +91,17 @@ class SaleOrderController extends Controller
             } else {
                 $stocks = new StockManipulation();
                 $stocks->reduce_stock($sale_order_details);
-                $stocks->reduce_total_stock($request);
+                $stock_count_quantity = StockCount::where([['product_id', $sale_order_detail['product_id']], ['unit_id', $sale_order_detail['unit_id']]])->value('total_quantity');
+                $sale_order_quantity = $sale_order_detail['quantity'];
+                $total_quantity = $stock_count_quantity - $sale_order_quantity;
+                StockCount::where([['product_id', $sale_order_detail['product_id']], ['unit_id', $sale_order_detail['unit_id']]])->update([
+                    'total_quantity'=>$total_quantity
+                ]);
+                Product::where([['id', $sale_order_detail['product_id']], ['unit_id', $sale_order_detail['unit_id']]])->update([
+                    'quantity'=>$total_quantity
+                ]);
+
+                $stocks->mail_current_stock();
             }
         }
 
@@ -145,7 +155,7 @@ class SaleOrderController extends Controller
         $sale_order->status = '1';
         $sale_order->save();
         $sale_order_details = $request['sale_order_details'];
-
+        $stock = new StockManipulation();
         foreach ($sale_order_details as $sale_order_detail) {
             $current_stock = Stock::where([['product_id', $sale_order_detail['product_id']], ['unit_id', $sale_order_detail['unit_id']]])->get();
             if ($current_stock->isEmpty()) {
@@ -185,7 +195,6 @@ class SaleOrderController extends Controller
                     Product::where([['id', $sale_order_detail['product_id']], ['unit_id', $sale_order_detail['unit_id']]])->update([
                         'quantity'=>$sale_order_detail_quantity
                     ]);
-
 
 //            dd($purchase_order_detail['quantity']);
                     SaleOrderDetail::where([['sale_order_id',$sale_order->id],['product_id',$sale_order_detail['product_id']],['unit_id',$sale_order_detail['unit_id']]])->update([
@@ -230,8 +239,7 @@ class SaleOrderController extends Controller
                 }
 
             }else{
-
-            $stock = new StockManipulation();
+            $stock->update_sale_order_total_quantity($sale_order_details,$id);
             $stock->restore_stock($sale_order_id);
             SaleOrderDetail::where('sale_order_id', $id)->delete();
 //            dd($purchase_order_detail['quantity']);
@@ -247,9 +255,8 @@ class SaleOrderController extends Controller
                 'discount' => '0',
                 'extra_charge' => '0'
             ]);
-            $stocks = new StockManipulation();
-            $stocks->reduce_stock($sale_order_details);
-            $stocks->reduce_total_stock($request);
+            $stock->reduce_stock($sale_order_details);
+//            $stocks->reduce_total_stock($request);
           }
 
         }
