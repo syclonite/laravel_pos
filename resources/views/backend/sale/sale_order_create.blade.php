@@ -97,9 +97,6 @@
         </div>
     @endif
 
-    {{--    <form action="{{route('purchase.store')}}" method="POST" enctype="multipart/form-data">--}}
-    {{--        @csrf--}}
-
     <div class="row">
         <div class="col-xs-4 col-sm-4 col-md-4">
             <div class="form-group">

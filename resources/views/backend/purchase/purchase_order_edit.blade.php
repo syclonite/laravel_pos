@@ -81,12 +81,12 @@
     <table id="myTable" class="table table-striped table-light table-bordered">
         <thead>
         <tr>
-            <th>Serial No.</th>
-            <th>Product Name</th>
-            <th>Purchase Amount</th>
-            <th>Quantity</th>
+            <th>Serial</th>
+            <th>Products</th>
             <th>Unit</th>
-            <th>Selling Amount </th>
+            <th>Purchase Price</th>
+            <th>Quantity</th>
+            <th>Selling Amount</th>
             <th>Subtotal </th>
         </tr>
         </thead>
@@ -101,20 +101,20 @@
                     @endforeach
                 </select>
             </td>
+              <td>
+                  <select id="unit_id" name="unit_id" class="form-control unit_id">
+                      @foreach($units as $unit)
+                          <option value="{{ $unit->id }}"{{ $unit->id == $purchase_order_detail->unit_id ? 'selected' : '' }}>{{ $unit->unit_name}}</option>
+                      @endforeach
+                  </select>
+              </td>
             <td>
                 <input id="purchase_amount" class="form-control" type="text" name="purchase_amount"  onchange="subtotal_calculation()" value="{{$purchase_order_detail->purchase_amount}}">
             </td>
             <td>
                 <input id="quantity" class="form-control quantity" type="text" name="quantity" onchange="subtotal_calculation()" value="{{$purchase_order_detail->quantity}}">
             </td>
-            <td>
-                <select id="unit_id" name="unit_id" id="" class="form-control unit_id" >
-                    @foreach($units as $unit)
-                        <option value="{{ $unit->id }}"{{ $unit->id == $purchase_order_detail->unit_id ? 'selected' : '' }}>{{ $unit->unit_name}}</option>
-                    @endforeach
-                </select>
-            </td>
-            <td>
+            <td >
                 <input id="selling_amount" class="form-control selling_amount" type="text" name="selling_amount"  value="{{$purchase_order_detail->selling_amount}}">
             </td>
             <td>
@@ -184,7 +184,7 @@
 
         function showmsg(){
             alert("Order Updated")
-            window.location.reload();
+            // window.location.reload();
         }
 
         function submit_purchase(data){

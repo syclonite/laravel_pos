@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderDetail;
 use App\Models\Stock;
+use App\Models\StockCount;
 use App\Models\Suppliers;
 use App\Models\Unit;
 use App\CustomClass\StockManipulation;
@@ -20,7 +21,7 @@ class PurchaseOrderController extends Controller
      */
     public function index()
     {
-        $purchaseOrders = PurchaseOrder::all();
+        $purchaseOrders = PurchaseOrder::orderBy('created_at','DESC')->get();
         return view('backend.purchase.purchase_order_index',compact('purchaseOrders'))->with('i');
     }
 
@@ -31,9 +32,9 @@ class PurchaseOrderController extends Controller
      */
     public function create()
     {
-        $products = Product::all();
-        $suppliers = Suppliers::all();
-        $units = Unit::all();
+        $products = Product::orderBy('created_at','DESC')->get();
+        $suppliers = Suppliers::orderBy('created_at','DESC')->get();
+        $units = Unit::orderBy('created_at','DESC')->get();
         return view('backend.purchase.purchase_order_create',compact('products','suppliers','units'));
     }
 
@@ -55,7 +56,7 @@ class PurchaseOrderController extends Controller
             'paid_amount' => $request['purchase_order']['paid_amount'],
             'extra_charge' => $request['purchase_order']['extra_charge'],
             'discount' => $request['purchase_order']['discount'],
-            'status' => '1',
+            'status' => $request['purchase_order']['status'],
         ]);
         $purchase_order->save();
         $purchase_order_details = $request['purchase_order_details'];
@@ -137,9 +138,10 @@ class PurchaseOrderController extends Controller
         $purchase_order->status = '1';
         $purchase_order->save();
         $purchase_order_details = $request['purchase_order_details'];
+        $stocks = new StockManipulation();
+        $stocks->update_purchase_order_total_quantity($purchase_order_details,$id);
         PurchaseOrderDetail::where('purchase_order_id',$id)->delete();
         Stock::where('purchase_order_id',$id)->delete();
-        $stocks = new StockManipulation();
         foreach ($purchase_order_details as $purchase_order_detail) {
 //            dd($purchase_order_detail['quantity']);
             PurchaseOrderDetail::create([
@@ -165,7 +167,7 @@ class PurchaseOrderController extends Controller
                 'selling_amount' => $purchase_order_detail['selling_price'],
             ]);
         }
-        $stocks->add_update_total_stock($request);
+//        $stocks->add_update_total_stock($request);
     }
 
     /**
@@ -174,25 +176,79 @@ class PurchaseOrderController extends Controller
      * @param  \App\Models\PurchaseOrder  $purchase_order
      * @return \Illuminate\Http\Response
      */
-    public function destroy(PurchaseOrder $id)
+    public function destroy($id)
     {
-        $purchase_order_id = PurchaseOrder::find($id)->first()->pluck('id');
-        $purchase_order_details = PurchaseOrderDetail::where('purchase_order_id',$purchase_order_id)->get(['product_id','unit_id','quantity','purchase_amount','selling_amount','status']);
-
+        $purchase_order_id = PurchaseOrder::find($id);
+//        dd($purchase_order_id->id);
+        $purchase_order_details = PurchaseOrderDetail::where('purchase_order_id',$purchase_order_id->id)->get();
+//      dd($purchase_order_details);
         foreach ($purchase_order_details as $purchase_order_detail){
 //            dd($purchase_order_detail);
-            $product_id = $purchase_order_detail['product_id'];
-            $unit_id = $purchase_order_detail['unit_id'];
-            $selling_amount = $purchase_order_detail['selling_amount'];
-
-            $data = Stock::where([['product_id',$product_id],['unit_id',$unit_id]])->get();
-
+            $product_id = $purchase_order_detail->product_id;
+            $unit_id = $purchase_order_detail->unit_id;
+            $quantity = $purchase_order_detail->quantity;
+            $stock_quantity = StockCount::where([['product_id',$product_id],['unit_id',$unit_id]])->value('total_quantity');
+            $subtraction = $stock_quantity - $quantity;
+            StockCount::where([['product_id',$product_id],['unit_id',$unit_id]])->update([
+                'total_quantity' => $subtraction
+            ]);
+            Product::where([['id',$product_id],['unit_id',$unit_id]])->update([
+                'quantity' => $subtraction
+            ]);
         }
-//        dd($data);
-        $id->delete(); // Easy right?
-        $stocks = new StockManipulation();
-        $stocks->adjust_total_stock($data);
+        $purchase_order_id->delete(); // Easy right?
+//        $stocks = new StockManipulation();
+//        $stocks->adjust_total_stock($data);
 
         return redirect()->route('purchase.index')->with('success','Purchase Order Deleted.');
     }
+
+    public function get_supplier(Request $request)
+    {
+//        dd($request['id']);
+        $supplier_data = Suppliers::where('id',$request['id'])->first();
+        return json_encode(array('supplier_data'=>$supplier_data));
+//        return response()->json(['customer_data'=>$customer_data]);
+
+    }
+
+    public function add_new_supplier(Request $request)
+    {
+//        dd($request->all());
+        $add_supplier = new Suppliers([
+            'supplier_name' => $request['suppliers']['supplier_name'],
+            'phone_1' => $request['suppliers']['supplier_phone'],
+            'address' => $request['suppliers']['supplier_address'],
+            'status' => '1',
+        ]);
+        $add_supplier->save();
+    }
+
+    public function get_supplier_ajax(Request $request){
+        if ($request == true){
+            $supplier_data_ajax = Suppliers::orderBy('created_at','DESC')->get();
+            return json_encode(array('supplier_data_ajax'=>$supplier_data_ajax));
+        }
+
+    }
+
+    public function add_new_unit(Request $request){
+
+        $add_unit = new Unit([
+            'unit_name' => $request['units']['unit_name'],
+            'unit_description' => $request['units']['unit_des'],
+            'status' => '1',
+        ]);
+        $add_unit->save();
+    }
+
+    public function get_units_all_ajax(Request $request)
+    {
+        if ($request == true) {
+            $units_data_ajax = Unit::orderBy('created_at', 'DESC')->get();
+            return json_encode(array('units_data_ajax' => $units_data_ajax));
+        }
+    }
+
+
 }

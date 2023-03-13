@@ -2,6 +2,7 @@
 
 namespace App\CustomClass;
 
+use App\Models\PurchaseOrderDetail;
 use App\Models\SaleOrderDetail;
 use App\Models\Product;
 use App\Models\Stock;
@@ -17,6 +18,47 @@ class StockManipulation
 
    public function update_stock($request){
         Stock::create($request);
+    }
+
+    public function update_purchase_order_total_quantity($purchase_order_details,$purchase_order_id){
+       foreach($purchase_order_details as $purchase_order_detail){
+//           dd($purchase_order_detail['product_id']);
+           $current_quantity = PurchaseOrderDetail::where([['purchase_order_id',$purchase_order_id],['product_id', $purchase_order_detail['product_id']], ['unit_id', $purchase_order_detail['unit_id']]])->value('quantity');
+           $current_total_quantity = StockCount::where([['product_id', $purchase_order_detail['product_id']], ['unit_id', $purchase_order_detail['unit_id']]])->value('total_quantity');
+           $request_quantity = $purchase_order_detail['quantity'];
+//           dd("total_quantity:".$current_total_quantity,"current_quantity:".$current_quantity,"request_quantity:".$purchase_order_detail['quantity']);
+            if ($current_quantity < $request_quantity){
+                $result = $request_quantity - $current_quantity;
+                $calculate_total = $current_total_quantity + $result;
+                StockCount::where([['product_id', $purchase_order_detail['product_id']], ['unit_id', $purchase_order_detail['unit_id']]])->update([
+                    'total_quantity'=>$calculate_total
+                ]);
+                Product::where([['id', $purchase_order_detail['product_id']], ['unit_id', $purchase_order_detail['unit_id']]])->update([
+                    'quantity'=>$calculate_total
+                ]);
+            }
+            elseif ($current_quantity > $request_quantity){
+                $result = $current_quantity - $request_quantity;
+                $calculate_total = $current_total_quantity - $result;
+                StockCount::where([['product_id', $purchase_order_detail['product_id']], ['unit_id', $purchase_order_detail['unit_id']]])->update([
+                    'total_quantity'=>$calculate_total
+                ]);
+                Product::where([['id', $purchase_order_detail['product_id']], ['unit_id', $purchase_order_detail['unit_id']]])->update([
+                    'quantity'=>$calculate_total
+                ]);
+            }
+            elseif ($current_quantity == $request_quantity){
+                StockCount::where([['product_id', $purchase_order_detail['product_id']], ['unit_id', $purchase_order_detail['unit_id']]])->update([
+                    'total_quantity'=>$current_total_quantity
+                ]);
+                Product::where([['id', $purchase_order_detail['product_id']], ['unit_id', $purchase_order_detail['unit_id']]])->update([
+                    'quantity'=>$current_total_quantity
+                ]);
+            }
+
+       }
+
+
     }
 
    public function reduce_stock($request){
@@ -168,8 +210,8 @@ class StockManipulation
        foreach ($sale_stocks as $sale_stock){
            $product_id = $sale_stock['product_id'];
            $unit_id = $sale_stock['unit_id'];
-           $total_quantity = Stock::where([['product_id',$product_id],['unit_id',$unit_id]])->value('quantity');
-           $stock_count_quantity = StockCount::where([['product_id',$product_id],['unit_id',$unit_id]])->value('total_quantity');
+           $total_quantity = Stock::where([['product_id',$product_id],['unit_id',$unit_id]])->sum('quantity');
+           $stock_count_quantity = StockCount::where([['product_id',$product_id],['unit_id',$unit_id]])->sum('total_quantity');
            $final_stock_result =  $stock_count_quantity - $total_quantity;
 //
 //           dd($total_quantity);
