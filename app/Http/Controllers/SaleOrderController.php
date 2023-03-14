@@ -256,34 +256,12 @@ class SaleOrderController extends Controller
                 'extra_charge' => '0'
             ]);
             $stock->reduce_stock($sale_order_details);
-//            $stocks->reduce_total_stock($request);
           }
 
         }
 
-//        $stock = new StockManipulation();
-//        $stock->restore_stock($sale_order_id);
-//        SaleOrderDetail::where('sale_order_id', $id)->delete();
-//        foreach ($sale_order_details as $sale_order_detail) {
-////            dd($purchase_order_detail['quantity']);
-//            SaleOrderDetail::create([
-//                'customer_id' => $request['sale_order']['customer_id'],
-//                'user_id' => '2',
-//                'sale_order_id' => $sale_order->id,
-//                'product_id' => $sale_order_detail['product_id'],
-//                'unit_id' => $sale_order_detail['unit_id'],
-//                'quantity' => $sale_order_detail['quantity'],
-//                'product_selling_price' => $sale_order_detail['product_price'],
-//                'status' => '1',
-//                'discount' => '0',
-//                'extra_charge' => '0'
-//            ]);
-//        }
-//        $stocks = new StockManipulation();
-//        $stocks->reduce_stock($sale_order_details);
-//        $stocks->reduce_total_stock($request);
     }
-//        dd($sale_order_details);
+
 
     /**
      * Remove the specified resource from storage.
